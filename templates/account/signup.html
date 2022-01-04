@@ -1,0 +1,29 @@
+{% extends "account/base.html" %}
+
+{% block content %}
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+  {% csrf_token %}
+  <h1 style="color:white" class="h3 mb-3 fw-normal">Регистрация</h1>
+      <div class="form-floating">
+        <input style="border-radius: .2rem .2rem 0 0;" type="email" name='email' class="form-control bg-secondary" id="floatingInput" placeholder="name@example.com" required>
+        <label for="floatingInput">Email</label>
+      </div>
+      <div class="form-floating">
+        <input style="border-radius: 0 0 0 0;" type="password" name='password1' class="form-control bg-secondary" id="floatingPassword" placeholder="Ваш пароль" required>
+        <label for="floatingPassword">Пароль</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input style="border-radius: 0 0 .2rem .2rem;" type="password" name='password2' class="form-control bg-secondary" id="floatingPassword" placeholder="Ваш пароль" required>
+        <label for="floatingPassword">Пароль ещё раз</label>
+      </div>
+      <div class="text-muted" class="checkbox mb-3">
+        <label>
+          <input style="color: white" type="checkbox" name="remember" class="form-check-input mb-3" value="remember-me"> Запомнить меня
+        </label>
+      </div>
+      <a class="text-muted" href="{% url 'account_login' %}">Уже есть аккаунт?</a>
+      <button class="w-100 btn btn-lg btn-outline-light" type="submit">Зарегестрироваться</button>
+      <p class="mt-5 mb-3 text-muted">Lorem Ipsum</p>
+    <div>
+</form>
+{% endblock %}

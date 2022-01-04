@@ -1,0 +1,30 @@
+{% extends 'account/base.html' %}
+
+{% load account %}
+
+{% block content %}
+    <form method='post'>
+      {% csrf_token %}
+      <h1 style="color:white" class="h3 mb-3 fw-normal">Вход</h1>
+      <div class="form-floating">
+        <input style="border-radius: .2rem .2rem 0 0;" name='login' class="form-control bg-secondary" id="floatingInput" placeholder="Ваш e-mail" required>
+        <label for="floatingInput">E-mail</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input style="border-radius: 0 0 .2rem .2rem;" type="password" name='password' class="form-control bg-secondary" id="floatingPassword" placeholder="Ваш пароль" required>
+        <label for="floatingPassword">Пароль</label>
+      </div>
+      <div class="text-muted" class="checkbox mb-3">
+        <label>
+          <input style="color: white" type="checkbox" name="remember" class="form-check-input" value="remember-me"> Запомнить меня
+        </label>
+      </div>
+      <div class="my-3 text-muted">
+        <a class="text-muted" href="{% url 'account_reset_password' %}">Забыли пароль</a> | 
+        <a class="text-muted" href="{% url 'account_signup' %}">Ещё нет аккаунта?</a>
+      </div>
+      <button class="w-100 btn btn-lg btn-outline-light" type="submit">Войти</button>
+      <p class="mt-5 mb-3 text-muted">Lorem Ipsum</p>
+    <div>
+    </form>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title></title>
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+	<link rel="shortcut icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2885/2885483.png"/>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+</head>
+<body class="bg-light">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container-fluid">
+		  	<a class="navbar-brand">Foodstuff Assistant</a>
+			<div class="my-auto ms-0 navbar-brand">
+				<img width="32" height="32" src="https://cdn-icons-png.flaticon.com/512/992/992710.png" alt="Croissant" title="Croissant" class="loaded">
+			</div>
+		  	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		    	<span class="navbar-toggler-icon"></span>
+		  	</button>
+		  	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		    	<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link {% block main %}{% endblock %}" aria-current="page" href="{% url 'homepage' %}">Главная</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link {% block recipes %}{% endblock %}" href="{% url 'recipe_list' %}">Рецепты</a>
+					</li>
+		    	</ul>
+		  	</div>
+		</div>
+	</nav>
+	<nav style="background-color: white;" class="navbar navbar-expand-lg navbar-light py-0">
+	  <div class="container mx-auto">
+	    <div style="flex-grow: 0;" class="collapse navbar-collapse mx-auto" id="navbarSupportedContent">
+	      <ul class="navbar-nav mb-2 mb-lg-0">
+	        {% if request.user.is_active %}
+			<li class="nav-item my-auto">
+				<a class="nav-link text-muted">{{ request.user.email }}</a>
+			</li>
+	        <li class="nav-item">
+	          <a class="nav-link {% block account_profile %}{% endblock %}" href="">Профиль</a>
+	        </li>
+			<li class="nav-item">
+	          <a class="nav-link" href="{% url 'recipe_create' %}">Новый рецепт</a>
+	        </li>
+			<li class="nav-item">
+	          <a class="nav-link {% block user_recipes %}{% endblock %}" href="">Ваши рецепты</a>
+	        </li>
+			<li class="nav-item">
+	          <a class="nav-link {% block favorites %}{% endblock %}" href="">Избранное</a>
+	        </li>
+			<li class="nav-item">
+				<form method="post" action="{% url 'account_logout' %}">
+					{% csrf_token %}
+					<button style="border: none; outline: none; background: none" class="nav-link" type="submit">Выход</button>
+				</form>
+	        </li>
+			{% else %}
+			<li class="nav-item">
+	          <a class="nav-link" href="{% url 'account_login' %}">Войти</a>
+	        </li>
+			<li class="nav-item">
+	          <a class="nav-link" href="{% url 'account_signup' %}">Зарегистрироваться</a>
+	        </li>
+			{% endif %}
+	      </ul>
+	    </div>
+	  </div>
+	</nav>
+	<div class="container px-0">
+	    <main class="row pt-4">
+			{% block content %}
+			{% endblock %}
+    	</main>
+	</div>
+</body>
+</html>

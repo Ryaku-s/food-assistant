@@ -1,0 +1,40 @@
+{% extends 'catalog/index.html' %}
+
+{% load catalog_tag %}
+
+{% block content %}
+<div class="container my-5 row">
+    <div style="background-color: white; padding: min(3rem, 5%); " class="rounded border-top col-sm-6 mx-auto border-success shadow-sm">
+        <div class="mx-auto row col-sm-12">
+            <form method="post">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div>
+                        {% for field in form %}
+                        {% for error in field.errors %}
+                            <div class='alert alert-danger'>{{ error }}</div>
+                        {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <div class='alert alert-danger'>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% for message in messages %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                    <div class='alert alert-danger'>{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+                {{ form.as_p }}
+                <div>
+                    <label for="floatingPassword">Подтвердите пароль</label>
+                    <input  type="password" name='password' class="form-control" id="floatingPassword" placeholder="Ваш пароль" required>
+                </div>
+                <button class="btn btn-outline-success mt-3" type="submit" id="button-addon2">Сохранить</button>
+                <a href="{% url "account_profile" %}" class="btn btn-outline-secondary mt-3" id="button-addon2">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock%}

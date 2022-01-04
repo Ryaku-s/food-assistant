@@ -1,0 +1,73 @@
+{% extends 'catalog/index.html' %}
+
+{% load catalog_tag %}
+
+{% block content %}
+<div class="container my-5 row">
+    <div style="background-color: white; padding: min(3rem, 5%); " class="rounded border-top col border-success shadow-sm">
+        <div class="mx-auto">
+            <div style="position: relative">
+                <span class="mb-0 h1">{{ recipe.title }}</span>
+                {% if request.user.id == recipe.author.id %}
+                    <span class="h1 text-success" style="right: 0; position: absolute;">
+                        <a class="link-success" href="{% url "recipe_update" pk=recipe.pk %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                            </svg>
+                        </a>
+                        {% comment %} <a class="link-danger" href="{% url "recipe_deletion" pk=recipe.pk %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </a> {% endcomment %}
+                    </span>
+                {% else %}
+                    {% if request.user.is_active %}
+                        {% if recipe in favorites.all %}
+                            <span class="h1 text-success" style="right: 0; position: absolute;">
+                                <a class="link-success" href="{% url "recipe_removing_from_favorites" pk=recipe.pk %}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bookmark-heart-fill" viewBox="0 0 16 16">
+                                        <path d="M2 15.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v13.5zM8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z"/>
+                                    </svg>
+                                </a>
+                            </span>
+                        {% else %}
+                            <span class="h1 text-secondary" style="right: 0; position: absolute;">
+                                <a class="link-secondary" href="{% url "recipe_adding_to_favorites" pk=recipe.pk %}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bookmark-heart" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z"/>
+                                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                                    </svg>
+                                </a>
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <strong class="d-inline-block mb-2 text-success">{{ recipe.category }} • {{ recipe.national_cuisine }} • {{ recipe.get_duration_display }} • {{ recipe.pub_date|date:"d/m/Y" }}</strong>
+            {% if recipe.image %}
+                <div class="col-auto d-lg-block p-0 mb-5 mt-4">
+                    <img style="border-radius: .2rem;" width="100%" src="{{ recipe.image.url }}">
+                </div>
+            {% else %}
+				<svg class="col-auto d-lg-block p-0 mb-5 mt-4" style="border-radius: .2rem; height: 413px" width="826px" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e9ecef"></rect></svg>
+            {% endif %}
+            <p>{{ recipe.description }}</p>
+            <h5>Ингредиенты</h5>
+            <p>{{ recipe.ingredients.all|join:", "}}.</p>
+            <h5 class="mb-3">Указания к рецепту</h5>
+            {% for direction in recipe.directions.all %}
+                <div class="row mb-3">
+                {% if direction.image %}
+                    <img style="max-width: 350px;" class="me-3 rounded col" width="100%" height="100%" src="{{ direction.image.url }}">
+                {% endif %}
+                    <p class="col"><b class="h4">{{ direction.position|add:1 }}. </b>{{ direction.text }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% get_sidebar %}
+</div>
+{% endblock %}

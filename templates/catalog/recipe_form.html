@@ -1,0 +1,149 @@
+{% extends 'catalog/index.html' %}
+
+{% load catalog_tag %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5 row mx-auto">
+  <div style="background-color: white; padding: min(3rem, 5%); max-width: 65%;" class="rounded border-top col border-success shadow-sm">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <div class='alert alert-success'>{{ message }}</div>
+        {% endif %}
+      {% endfor %}
+      {% if form.errors %}
+        <div>
+          {% for field in form %}
+            {% for error in field.errors %}
+              <div class='alert alert-danger'>{{ field.label_tag }} {{ error }}</div>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <div class='alert alert-danger'>{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if ingredient_formset.errors %}
+        <div>
+          {% for form in ingredient_formset %}
+            {% for field in form %}
+              {% for error in field.errors %}
+                <div class='alert alert-danger'>{{ field.label_tag }} {{ error }}</div>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <div class='alert alert-danger'>{{ error }}</div>
+            {% endfor %}
+        {% endfor %}
+        </div>
+      {% endif %}
+      {% if direction_formset.errors %}
+        <div>
+        {% for form in direction_formset%}
+          {% for field in form %}
+            {% for error in field.errors %}
+              <div class='alert alert-danger'>{{ field.label_tag }} {{ error }}</div>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <div class='alert alert-danger'>{{ error }}</div>
+          {% endfor %}
+        {% endfor %}
+        </div>
+      {% endif %}
+      {% if recipe %}
+        <h3>{{ recipe.title }}</h3>
+      {% else %}
+        <h3>Новый рецепт</h3>
+      {% endif %}
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <label for="firstName" class="form-label h5">Название</label>
+          {{ form.title }}
+        </div>
+        <div class="col-sm-6">
+          <label for="username" class="form-label h5">Категория</label>
+          {{ form.category }}
+        </div>
+        <div class="col-sm-5 row mt-0 g-3">
+          <p class="h5 col-sm-12">Длительность приготовления</p>
+          <div class="col-sm-5 mt-0">
+            {{ form.hours }}
+          </div>
+          <div class="col-sm-1 mx-auto mt-0">
+            <p class="h5">:</p>
+          </div>
+          <div class="col-sm-5 mt-0">
+            {{ form.minutes }}
+          </div>
+        </div>
+        <div class="col-sm-7">
+          <label for="username" class="form-label h5">Национальная кухня</label>
+          {{ form.national_cuisine }}
+        </div>
+        <div class="col-12">
+          <label for="username" class="form-label h5">Описание</label>
+          {{ form.description }}
+        </div>
+        <hr>
+        <div class="col-sm-6">
+          <label for="username" class="form-label h5 d-block" aria-describedby="button-addon2">Изображение</label>
+          {{ form.image }}
+        </div>
+        {% if recipe.image %}
+        <div class="col-sm-6">
+          <img style="max-width: 350px;" class="me-3 rounded border" width="100%" src="{{ recipe.image.url }}">
+        </div>
+        {% endif %}
+        <hr>
+        <div id="ingredientFormSet" class="col-sm-12">
+          {{ ingredient_formset.management_form }}
+          <div style="display: none;" id="emptyIngredient" class="col-12 row g-3">
+            {{ ingredient_formset.empty_form.as_p }}
+            <div id="removeIngredient" onclick="removeIngredientForm(__prefix__)" class="btn btn-outline-danger col-sm-4 my-auto">Убрать</div>
+            <hr>
+          </div>
+          {% for ingredient_form in ingredient_formset.forms %}
+            <div id="ingredientForm" class="col-12 row g-3" form-number="{{ forloop.counter|add:-1 }}">
+              {{ ingredient_form.as_p }}
+              <hr>
+            </div>
+          {% endfor %}
+        </div>
+        <div id="addIngredient" class="btn btn-outline-success">Добавить ингредиент</div>
+        <hr>
+      </div>
+      <h3 class="mb-0 mt-3">Указания к рецепту</h3>
+      <div id="directionFormSet" class="col-sm-12">
+        {{ direction_formset.management_form }}
+        <div style="display: none;" id="emptyDirection" class="col-12 row g-3">
+          {{ direction_formset.empty_form.as_p }}
+          <div id="removeDirection" onclick="removeDirectionForm(__prefix__)" class="btn btn-outline-danger col-sm-4 my-auto">Убрать</div>
+          <hr>
+        </div>
+        {% for direction_form in direction_formset.forms %}
+          <div id="directionForm" class="col-12" form-number="{{ forloop.counter|add:-1 }}">
+            {{ direction_form.as_p }}
+            <hr>
+          </div>
+        {% endfor %}
+      </div>
+      <div id="addDirection" class="btn btn-outline-success w-100">Добавить указание</div>
+      <hr>
+      <div class="row">
+        <button class="btn btn-outline-success col-2 me-3" type="submit" id="button-addon2">Сохранить</button>
+        <div class="col my-2">
+          {% if recipe.is_draft %}
+            <input type="checkbox" name="pub" class="form-check-input">
+            <label class="form-check-label">Опубликовать</label>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+  </div>
+  {% get_sidebar %}
+</div>
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

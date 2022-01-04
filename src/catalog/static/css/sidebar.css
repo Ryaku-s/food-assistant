@@ -1,0 +1,20 @@
+.side-bar:hover {
+	animation-name: side-hover;
+	animation-duration: .25s;
+	animation-iteration-count: 1;
+	animation-fill-mode: both;
+}
+
+@keyframes side-hover{
+	from{
+		background-color: none;
+	}
+	to{
+		background-color: rgba(0, 0, 0, .05);
+	}
+}
+
+#ingredientForm > p {
+	flex: 0 0 auto;
+    width: 33.33333333%;
+}

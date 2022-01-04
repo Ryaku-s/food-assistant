@@ -1,0 +1,33 @@
+<div style="background-color: white; height: fit-content; font-size:12px; max-width: 350px;" class="px-0 py-4 rounded border-top border-success mx-4 d-none d-lg-block">
+  <h4 align="center" style="color: white; box-sizing: border-box;" class="py-2 px-2 bg-success">Свежее:</h4>
+  {% for recipe in recipes %}
+    <main class="container mt-3 side-bar">
+      <a class="text-success" href="{{ recipe.get_absolute_url }}">
+        <div class="col-md">
+          <div style="height: 75px;" class="d-flex rounded">
+            {% if recipe.image %}
+              <div class="col-auto d-lg-block p-0">
+                <img height="75px" src="{{ recipe.image.url }}">
+              </div>
+            {% else %}
+              <svg class="col-auto" style="height: 75px; object-fit: cover;" width="150px" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e9ecef"></rect></svg>
+            {% endif %}
+            <div class="col d-flex flex-column position-static p-2">
+              <p class="h6 mb-1">{{ recipe.title|truncatewords:5 }}</p>
+              <div class="d-flex">
+                <span style="color: grey;" class="me-2 small">{{ recipe.pub_date|date:'d/m/Y' }}</span>
+                <span class="small kind">
+                  {% if recipe.author.display_name %}
+                    {{ recipe.author.display_name }}
+                  {% else %}
+                    {{ recipe.author|truncatechars:20 }}
+                  {% endif %}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </main>
+  {% endfor %}
+</div>

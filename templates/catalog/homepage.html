@@ -1,0 +1,100 @@
+{% extends 'catalog/index.html' %}
+
+{% block main %}active{% endblock %}
+
+{% block content %}
+		<div style="color:white; flex-shrink: 1;" class="container bg-success d-flex rounded-3 p-3 mx-2">
+			<div class="col-auto my-auto me-3">
+				<img width="48" height="48" src="https://cdn-icons-png.flaticon.com/512/992/992710.png" alt="Croissant" title="Croissant" class="loaded">
+			</div>
+			<div class="my-auto">
+				<h5 class="col mb-0">Foodstuff Assistant</h5>
+				<p class="small mb-0">2021</p>
+			</div>
+		</div>
+		<div style="min-height: 389px;" class="container row mt-3">
+			<div style="background-color: white;" class="col container shadow-sm rounded p-3 mx-2 border-top border-success">
+				<h5>Ваши рецепты</h5>
+				<hr class="rounded">
+				<div class="container">
+				{% if user_recipes %}
+					{% for recipe in user_recipes %}
+						<div class="d-flex text-muted pt-2 mb-0">
+							{% if request.user.avatar %}
+								<div class="col-auto d-none d-lg-block me-2">
+									<img style="width: 32px; height: 32px; border-radius: .65rem .65rem .65rem .65rem; object-fit: cover" src="{{ recipe.image.url }}">
+								</div>
+							{% else %}
+								<svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#d63384"></rect><text x="50%" y="50%" fill="#d63384" dy=".3em">32x32</text></svg>
+							{% endif %}
+							<p class="pb-3 mb-0 small lh-sm">
+							<a href="{{ recipe.get_absolute_url }}" style="font-weight: bolder;" class="d-block link-success">
+                {{ recipe.title }}
+              </a>
+							{{ recipe.category }} • {% if not recipe.is_draft%}
+                Опубликован: {{ recipe.pub_date|date:"d/m/Y" }}
+              {% else %}
+                Черновик
+              {% endif %}
+						</div>
+						<hr style="margin-left: 38px;" class="mt-0 bg-secondary">
+					{% endfor %}
+          {% else %}
+            <div style="text-align: center;" class="text-muted mb-0">
+              <p>Здесь будут отображены ваши рецепты</p>
+            </div>
+          {% endif %}
+				</div>
+			</div>
+			<div style="background-color: white;" class="col container shadow-sm rounded p-3 mx-2 border-top border-success">
+				<h5>Ваши подписки</h5>
+				<hr class="rounded">
+				<div class="container">
+          {% if user_subscriptions %}
+            {% for sub in user_subscriptions %}
+              <div class="d-flex text-muted pt-2 mb-0">
+              {% if sub.user.avatar %}
+                <div class="col-auto d-none d-lg-block">
+                  <img style="width: 32px; height: 32px; border-radius: 0 .65rem .65rem 0; object-fit: cover" src="{{ sub.user.avatar.url }}">
+                </div>
+              {% else %}
+              <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#d63384"></rect><text x="50%" y="50%" fill="#d63384" dy=".3em">32x32</text></svg>
+              {% endif %}
+              <p class="pb-3 mb-0 small lh-sm">
+                <strong class="d-block text-gray-dark">{{ sub.user }}</strong>
+                {{ sub.user.description|truncatewords:10 }}
+              </div>
+              <hr style="margin-left: 38px;" class="mt-0 bg-secondary">
+            {% endfor %}
+          {% else %}
+            <div style="text-align: center;" class="text-muted mb-0">
+              <p>Здесь будут отображены ваши подписки</p>
+            </div>
+          {% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="row my-3">
+			<h1 class="mb-3 mx-2">Последние рецепты:</h1>
+			{% for recipe in recent_recipes %}
+				<div class="col mx-2">
+					<div style="background-color: white; min-height: 280px;" class="row g-0 rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+						<div class="col p-4 d-flex flex-column position-static">
+							<strong class="d-inline-block mb-2 text-success">{{ recipe.category }} • {{ recipe.national_cuisine }}</strong>
+							<h3 class="mb-0">{{ recipe.title|truncatewords:5 }}</h3>
+							<small class="mt-0 mb-3 text-muted">{{ recipe.pub_date|date:"d/m/Y" }}</small>
+							<p class="card-text mt-auto"><b>Продукты:</b> {{ recipe.ingredients.all|join:", "|truncatewords:9 }}</p>
+							<a href="{{ recipe.get_absolute_url }}" class="link-success">Подробнее</a>
+						</div>
+						{% if recipe.image %}
+							<div class="col-auto d-none d-lg-block">
+								<img style="width: 210px; height: 280px; border-radius: 0 .65rem .65rem 0; object-fit: cover" src="{{ recipe.image.url }}">
+							</div>
+						{% else %}
+							<svg class="col-auto d-none d-lg-block" style="border-radius: .2rem; width: 210px; height: 280px; object-fit: cover" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e9ecef"></rect></svg>
+						{% endif %}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+{% endblock %}
