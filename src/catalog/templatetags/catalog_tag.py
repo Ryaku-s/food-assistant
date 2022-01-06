@@ -5,6 +5,6 @@ register = template.Library()
 
 
 @register.inclusion_tag('catalog/tags/sidebar.html')
-def get_sidebar(limit: int = None):
+def get_sidebar(limit: int = 5):
     recipes = RecipeSelector().get_published_recipes(limit=limit)
     return {'recipes': recipes}

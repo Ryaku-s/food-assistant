@@ -62,5 +62,5 @@ IngredientFormSet = modelformset_factory(
     Ingredient,
     IngredientForm,
     extra=2,
-    can_delete=False
+    can_delete=True
 )
