@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.contrib import messages
 
-from src.base.selectors import RecipeSelector, get_ingredients_by_recipe_id, get_user_subscriptions
+from src.base.selectors import RecipeSelector, get_user_subscriptions
 from src.catalog.forms import IngredientFormSet, RecipeForm, DirectionFormSet
 
 
@@ -27,12 +27,6 @@ class HomepageService:
         recent_recipes = RecipeSelector.get_recent_recipes(limit=2)
         user_subscriptions = get_user_subscriptions(user=self.request.user, limit=4)
         return self._build_context(user_recipes, recent_recipes, user_subscriptions)
-
-
-def get_recipes_by_fitler(request):
-    q = request.GET.get("q", "")
-    queryset = RecipeSelector.get_published_recipes().filter(Q(title__icontains=q) | Q(description__icontains=q))
-    return queryset
 
 
 class RecipeService:
@@ -72,11 +66,11 @@ class RecipeService:
     def _is_forms_valid(recipe_form, ingredient_formset, direction_formset):
         return recipe_form.is_valid() and ingredient_formset.is_valid() and direction_formset.is_valid()
 
-    def _save_recipe(self, form, instance):
+    def _save_recipe(self, form):
         recipe = form.save(commit=False)
         recipe.author = self.request.user
         recipe.duration = self._get_duration()
-        is_draft = self._get_duration()
+        is_draft = self._get_is_draft()
         if not is_draft and not recipe.pub_date:
             recipe.is_draft = is_draft
             recipe.pub_date = timezone.now()

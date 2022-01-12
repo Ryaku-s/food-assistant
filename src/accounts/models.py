@@ -17,7 +17,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         size=[250, 250],
         crop=['middle', 'center'],
         upload_to=get_avatar_upload_path,
-        validators=[validators.FileExtensionValidator(allowed_extensions=['jpg', 'png'])]
+        validators=[validators.FileExtensionValidator(allowed_extensions=['jpeg', 'jpg', 'png'])]
     )
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

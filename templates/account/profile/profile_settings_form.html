@@ -11,27 +11,23 @@
                 {% if form.errors %}
                     <div>
                         {% for field in form %}
-                        {% for error in field.errors %}
-                            <div class='alert alert-danger'>{{ error }}</div>
-                        {% endfor %}
+                            {% for error in field.errors %}
+                                <div class='alert alert-danger'>{{ field.label_tag }} {{ error }}</div>
+                            {% endfor %}
                         {% endfor %}
                         {% for error in form.non_field_errors %}
                             <div class='alert alert-danger'>{{ error }}</div>
                         {% endfor %}
                     </div>
                 {% endif %}
-                {% for message in messages %}
+                {% comment %} {% for message in messages %}
                     {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
                     <div class='alert alert-danger'>{{ message }}</div>
                     {% endif %}
-                {% endfor %}
+                {% endfor %} {% endcomment %}
                 {{ form.as_p }}
-                <div>
-                    <label for="floatingPassword">Подтвердите пароль</label>
-                    <input  type="password" name='password' class="form-control" id="floatingPassword" placeholder="Ваш пароль" required>
-                </div>
-                <button class="btn btn-outline-success mt-3" type="submit" id="button-addon2">Сохранить</button>
-                <a href="{% url "account_profile" %}" class="btn btn-outline-secondary mt-3" id="button-addon2">Отмена</a>
+                <button class="btn btn-outline-success mt-3" type="submit">Сохранить</button>
+                <a href="{% url "account_profile_settings" %}" class="btn btn-outline-secondary mt-3">Отмена</a>
             </form>
         </div>
     </div>

@@ -42,13 +42,13 @@
 				<a class="nav-link text-muted">{{ request.user.email }}</a>
 			</li>
 	        <li class="nav-item">
-	          <a class="nav-link {% block account_profile %}{% endblock %}" href="">Профиль</a>
+	          <a class="nav-link {% block account_profile_settings %}{% endblock %}" href="{% url 'account_profile_settings' %}">Профиль</a>
 	        </li>
 			<li class="nav-item">
 	          <a class="nav-link" href="{% url 'recipe_create' %}">Новый рецепт</a>
 	        </li>
 			<li class="nav-item">
-	          <a class="nav-link {% block user_recipes %}{% endblock %}" href="">Ваши рецепты</a>
+	          <a class="nav-link {% block user_recipes %}{% endblock %}" href="{% url 'user_recipe_list' %}">Ваши рецепты</a>
 	        </li>
 			<li class="nav-item">
 	          <a class="nav-link {% block favorites %}{% endblock %}" href="">Избранное</a>

@@ -3,10 +3,10 @@ from django.views.generic import TemplateView, DetailView, ListView, CreateView,
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from src.base.selectors import RecipeSelector, get_directions_by_recipe_id, get_ingredients_by_recipe_id
-from src.catalog.services import HomepageService, get_recipes_by_fitler, RecipeService
+from src.catalog.services import HomepageService, RecipeService
 from src.catalog.models import Recipe
 from src.catalog.forms import IngredientFormSet, RecipeForm, DirectionFormSet
-from src.base.mixins import AuthorRequiredMixin
+from src.base.mixins import AuthorRequiredMixin, RecipeFilterMixin
 
 
 class HomepageView(TemplateView):
@@ -18,20 +18,21 @@ class HomepageView(TemplateView):
         return context
 
 
-class RecipeListView(ListView):
+class RecipeListView(RecipeFilterMixin, ListView):
     template_name = 'catalog/recipe_list.html'
     model = Recipe
     queryset = RecipeSelector.get_published_recipes()
     context_object_name = 'recipes'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["query"] = self.request.GET.get("q", "")
-        return context
-    
+
+class UserRecipeListView(LoginRequiredMixin, RecipeFilterMixin, ListView):
+    template_name = 'catalog/recipe_list.html'
+    model = Recipe
+    context_object_name = 'recipes'
+    paginate_by = 2
 
     def get_queryset(self):
-        return get_recipes_by_fitler(self.request)
+        return RecipeSelector.get_user_recipes(self.request.user)
 
 
 class RecipeDetailView(DetailView):

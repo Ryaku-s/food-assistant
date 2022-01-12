@@ -1,4 +1,4 @@
-from src.catalog.models import Direction, Ingredient, Recipe
+from src.catalog.models import Category, Direction, Ingredient, Recipe
 
 
 def get_user_subscriptions(user, limit: int = None):
@@ -7,6 +7,10 @@ def get_user_subscriptions(user, limit: int = None):
         if limit:
             return queryset[:limit]
         return queryset
+
+
+def get_categories():
+    return Category.objects.all()
 
 
 class RecipeSelector:
