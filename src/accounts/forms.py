@@ -8,8 +8,7 @@ from django.forms.widgets import PasswordInput
 User = get_user_model()
 
 
-class UserForm(ModelForm):
-    """Форма пользователя"""
+class UserProfileForm(ModelForm):
     password_check = CharField(label="Подтвердите пароль", max_length=128, widget=PasswordInput)
 
     def __init__(self, *args, **kwargs):
