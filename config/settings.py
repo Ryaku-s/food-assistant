@@ -30,7 +30,8 @@ INSTALLED_APPS = [
     'allauth.account',
 
     'src.accounts',
-    'src.catalog'
+    'src.catalog',
+    'src.favorites'
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,4 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+LOGIN_REDIRECT_URL = 'account_profile_settings'

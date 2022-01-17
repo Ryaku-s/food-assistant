@@ -23,13 +23,14 @@ class RecipeListView(RecipeFilterMixin, ListView):
     model = Recipe
     queryset = RecipeSelector.get_published_recipes()
     context_object_name = 'recipes'
+    paginate_by = 10
 
 
 class UserRecipeListView(LoginRequiredMixin, RecipeFilterMixin, ListView):
-    template_name = 'catalog/recipe_list.html'
+    template_name = 'catalog/user_recipe_list.html'
     model = Recipe
     context_object_name = 'recipes'
-    paginate_by = 2
+    paginate_by = 10
 
     def get_queryset(self):
         return RecipeSelector.get_user_recipes(self.request.user)

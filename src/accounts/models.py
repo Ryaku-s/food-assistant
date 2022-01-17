@@ -1,6 +1,7 @@
 from django.db import models
 from django.core import validators
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.urls import reverse
 
 from django_resized import ResizedImageField
 
@@ -26,6 +27,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    def get_absolute_url(self):
+        return reverse("account_profile", kwargs={"pk": self.pk})
 
     class Meta:
         verbose_name = 'Пользователь'
