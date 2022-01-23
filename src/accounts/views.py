@@ -15,7 +15,7 @@ class ProfileView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_followed"] = is_followed(self.request, self.get_object())
+        context["is_followed"] = is_followed(self.request, self.object)
         return context
 
 

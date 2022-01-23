@@ -1,3 +1,4 @@
+from django.db.models import Manager
 from django.contrib.auth.models import BaseUserManager
 
 
@@ -27,3 +28,9 @@ class UserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         return self._create_user(email, password, **extra_fields)
+
+
+class FollowerManager(Manager):
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('user', 'subscriber')

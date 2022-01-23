@@ -22,7 +22,8 @@ class RecipeFilterMixin:
         q = request.GET.get("q", "")
         order_by = request.GET.get("order-by", "-pub_date")
         category_id = request.GET.get("category", "")
-        queryset = queryset.filter(Q(title__icontains=q) | Q(description__icontains=q))
+        if q:
+            queryset = queryset.filter(Q(title__icontains=q) | Q(description__icontains=q))
         if category_id:
             queryset.filter(category_id=category_id)
         queryset = queryset.order_by(order_by)

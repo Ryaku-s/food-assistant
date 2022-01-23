@@ -6,7 +6,7 @@ from django.urls import reverse
 from django_resized import ResizedImageField
 
 from src.base.services import get_avatar_upload_path
-from src.accounts.managers import UserManager
+from src.accounts.managers import UserManager, FollowerManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -48,6 +48,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Follower(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="followers", verbose_name="Пользователь")
     subscriber = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="subscriptions", verbose_name="Подписчик")
+
+    objects = FollowerManager()
 
     class Meta:
         verbose_name = 'Подписчик'

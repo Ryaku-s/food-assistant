@@ -46,7 +46,7 @@
         <h3>Пароль</h3>
         <div class="col-sm-12 row mx-auto my-2">
             <p class="text-muted my-auto col">Ваш пароль</p>
-            <input type="password" class="form-control col text-muted" value="{{ user.password|truncatechars:15 }}" disabled>
+            <span type="password" style="background-color: #e9ecef;" class="form-control col text-muted" disabled>•••••••••••••••</span>
         </div>
         <a href="{% url "account_reset_password" %}" class="link-danger">Сбросить пароль</a>
     </div>

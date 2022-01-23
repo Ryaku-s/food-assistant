@@ -100,7 +100,7 @@ class RecipeService:
         ingredient_formset = self._get_ingredient_formset()
         direction_formset = self._get_direction_formset()
         if self._is_forms_valid(recipe_form, ingredient_formset, direction_formset):
-            recipe = self._save_recipe(recipe_form, instance)
+            recipe = self._save_recipe(recipe_form)
             self._save_ingredients(ingredient_formset, recipe)
             self._save_directions(direction_formset, recipe)
             messages.success(self.request, f"Рецепт \"{recipe.title}\" успешно изменён")

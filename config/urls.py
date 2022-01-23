@@ -8,5 +8,10 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('src.accounts.urls')),
     path('', include('src.catalog.urls')),
-    path('', include('src.favorites.urls'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('', include('src.favorites.urls')),
+]
+
+
+if settings.DEBUG:
+    urlpatterns.append(path('__debug__/', include('debug_toolbar.urls')))
+    urlpatterns += (static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))

@@ -7,6 +7,7 @@ from django_resized import ResizedImageField
 from positions.fields import PositionField
 
 from src.base.services import get_direction_image_upload_path, get_recipe_image_upload_path
+from src.catalog.managers import RecipeManager, IngredientManager
 
 User = get_user_model()
 
@@ -25,13 +26,15 @@ class Recipe(models.Model):
     pub_date = models.DateTimeField("Дата публикации рецепта", blank=True, null=True)
     is_draft = models.BooleanField("Черновик", default=True)
     image = ResizedImageField(
-        "Изображение указания к рецепту",
+        "Изображение рецепта",
         size=[1000, 500],
         crop=['middle', 'center'],
         upload_to=get_recipe_image_upload_path,
         validators=[validators.FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
     )
     comment = models.TextField("Примечание", max_length=2000, blank=True)
+
+    objects = RecipeManager()
 
     def get_duration_display(self):
         minutes = self.duration.seconds // 60
@@ -78,6 +81,7 @@ class NationalCuisine(models.Model):
     def __str__(self) -> str:
         return self.title
 
+
 class Ingredient(models.Model):
     recipe = models.ForeignKey(to=Recipe, on_delete=models.CASCADE, related_name="ingredients", verbose_name="Рецепт")
     food = models.ForeignKey(to="Food", on_delete=models.CASCADE, verbose_name="Еда")
@@ -88,6 +92,8 @@ class Ingredient(models.Model):
         related_name="count",
         verbose_name="Единица измерения"
     )
+
+    objects = IngredientManager()
 
     class Meta:
         verbose_name = "Ингредиент"
@@ -140,4 +146,4 @@ class Direction(models.Model):
         ordering = ['position']
 
     def __str__(self) -> str:
-        return f"{self.recipe} - указание #{self.position}"
+        return f"{self.recipe} - указание #{self.position + 1}"

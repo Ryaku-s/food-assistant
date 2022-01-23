@@ -66,17 +66,17 @@ class RecipeUpdateView(AuthorRequiredMixin, UpdateView):
         if self.request.method != 'POST':
             context['direction_formset'] = DirectionFormSet(
                 prefix='direction',
-                queryset=get_directions_by_recipe_id(self.get_object().id)
+                queryset=get_directions_by_recipe_id(self.object.id)
             )
             context['ingredient_formset'] = IngredientFormSet(
                 prefix='ingredient',
-                queryset=get_ingredients_by_recipe_id(self.get_object().id)
+                queryset=get_ingredients_by_recipe_id(self.object.id)
             )
         return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        minutes = self.get_object().duration.seconds // 60
+        minutes = self.object.duration.seconds // 60
         kwargs['initial'] = {
             'hours': minutes // 60,
             'minutes': minutes % 60
