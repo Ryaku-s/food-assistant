@@ -33,7 +33,7 @@ class UserRecipeListView(LoginRequiredMixin, RecipeFilterMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return RecipeSelector.get_user_recipes(self.request.user)
+        return RecipeSelector.get_recipes_by_author_id(self.kwargs['author_id'])
 
 
 class RecipeDetailView(DetailView):

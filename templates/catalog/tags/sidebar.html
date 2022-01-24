@@ -17,11 +17,7 @@
               <div class="d-flex">
                 <span style="color: grey;" class="me-2 small">{{ recipe.pub_date|date:'d/m/Y' }}</span>
                 <span class="small kind">
-                  {% if recipe.author.display_name %}
-                    {{ recipe.author.display_name }}
-                  {% else %}
-                    {{ recipe.author|truncatechars:20 }}
-                  {% endif %}
+                  {{ recipe.author.get_short_name|truncatechars:20 }}
                 </span>
               </div>
             </div>

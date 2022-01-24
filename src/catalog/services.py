@@ -23,7 +23,7 @@ class HomepageService:
         }
 
     def execute(self):
-        user_recipes = RecipeSelector.get_user_recipes(user=self.request.user, limit=4)
+        user_recipes = RecipeSelector.get_recipes_by_author_id(author_id=self.request.user.id, limit=4)
         recent_recipes = RecipeSelector.get_recent_recipes(limit=2)
         user_subscriptions = get_user_subscriptions(user=self.request.user, limit=4)
         return self._build_context(user_recipes, recent_recipes, user_subscriptions)

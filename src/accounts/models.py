@@ -42,6 +42,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
     def get_short_name(self) -> str:
+        if self.display_name:
+            return self.display_name
         return self.email
 
 

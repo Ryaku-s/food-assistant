@@ -4,29 +4,31 @@
 
 {% block content %}
 		<div style="max-width: 800px;" class="row mx-auto col">
-		<h1>Ваши рецепты</h1>
-		<form method="get">
-			<div style="background-color: white;" class="input-group mt-2">
-				<input class="form-control p-2" type="search" name="q" placeholder="Поиск рецептов" value="{{ query }}" aria-label="Search">
-			</div>
-			<div style="background-color: white;" class="rounded my-3 row">
-				<p style="font-size: 20px;" class="py-2 px-3 my-auto col-3">Фильтры</p>
-				<select name="category" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0;" class="form-select border-success col m-0" id="id_category">
-					<option value="" {% if not category_id %}selected=""{% endif %}>Все категории</option>
-					{% for category in categories %}
-						<option value="{{ category.id }}" {% if category.id == category_id %}selected=""{% endif %}>{{ category.title }}</option>
-					{% endfor %}
-				</select>
-				<select name="order-by" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0;" class="form-select border-success col m-0" id="id_category">
-					<option value="-pub_date" {% if "-pub_date" == order_by or order_by == "" %}selected=""{% endif %}>Сначала новые</option>
-					<option value="duration" {% if "duration" == order_by %}selected=""{% endif %}>Сначала быстрые</option>
-					<option value="-duration" {% if "-duration" == order_by %}selected=""{% endif %}>Сначала долгие</option>
-					<option value="pub_date" {% if "pub_date" == order_by %}selected=""{% endif %}>Сначала старые</option>
-				</select>
-				<button type="submit" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0 .65rem .65rem 0;" class="btn btn-outline-success col">Найти</button>
-			</div>
-		</form>
+			<form method="get">
+				<div style="background-color: white;" class="input-group mt-2">
+					<input class="form-control p-2" type="search" name="q" placeholder="Поиск рецептов" value="{{ query }}" aria-label="Search">
+				</div>
+				<div style="background-color: white;" class="rounded my-3 row">
+					<p style="font-size: 20px;" class="py-2 px-3 my-auto col-3">Фильтры</p>
+					<select name="category" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0;" class="form-select border-success col m-0" id="id_category">
+						<option value="" {% if not category_id %}selected=""{% endif %}>Все категории</option>
+						{% for category in categories %}
+							<option value="{{ category.id }}" {% if category.id == category_id %}selected=""{% endif %}>{{ category.title }}</option>
+						{% endfor %}
+					</select>
+					<select name="order-by" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0;" class="form-select border-success col m-0" id="id_category">
+						<option value="-pub_date" {% if "-pub_date" == order_by or order_by == "" %}selected=""{% endif %}>Сначала новые</option>
+						<option value="duration" {% if "duration" == order_by %}selected=""{% endif %}>Сначала быстрые</option>
+						<option value="-duration" {% if "-duration" == order_by %}selected=""{% endif %}>Сначала долгие</option>
+						<option value="pub_date" {% if "pub_date" == order_by %}selected=""{% endif %}>Сначала старые</option>
+					</select>
+					<button type="submit" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0 .65rem .65rem 0;" class="btn btn-outline-success col">Найти</button>
+				</div>
+			</form>
 			{% for recipe in recipes %}
+				{% if forloop.counter == 1 %}
+					<h1>Рецепты пользователя {{ recipe.author.get_short_name }}</h1>
+				{% endif %}
 				<div style="min-width: 285px; width: 49%;" class="my-2 mx-1 col-4">
 					<a style="color: black;" href="{{ recipe.get_absolute_url }}">
 						<div style="background-color: white; min-height: 395px;" class="row mx-auto rounded shadow-sm">
@@ -40,7 +42,7 @@
 								<h5 style="min-height: 50px;" class="card-title">{{ recipe.title|truncatewords:5 }}</h5>
 								<p class="card-text pb-3"><b>Продукты:</b> {{ recipe.ingredients.all|join:", "|truncatewords:7 }}.</p>
 								<div style="position: absolute; bottom: 0; right: 0;" class="m-3 d-flex">
-									<a href="{{ recipe.author.get_absolute_url }}" class="my-auto link-success mx-1">{{ recipe.author }}</a>
+									<a href="{{ recipe.author.get_absolute_url }}" class="my-auto link-success mx-1">{{ recipe.author.get_short_name }}</a>
 									<small class="my-auto text-muted mx-1">{{ recipe.pub_date|date:"d/m/Y" }}</small>
 								</div>
 							</div>
