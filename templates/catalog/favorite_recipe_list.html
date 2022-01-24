@@ -1,77 +1,29 @@
-{% extends 'catalog/index.html' %}
+{% extends 'catalog/catalog_main.html' %}
 
 {% block recipes %}active{% endblock %}
 
-{% block content %}
-		<div style="max-width: 800px;" class="row mx-auto col">
-		<h1>Избранные рецепты</h1>
-		<form method="get">
-			<div style="background-color: white;" class="input-group mt-2">
-				<input class="form-control p-2" type="search" name="q" placeholder="Поиск рецептов" value="{{ query }}" aria-label="Search">
-			</div>
-			<div style="background-color: white;" class="rounded my-3 row">
-				<p style="font-size: 20px;" class="py-2 px-3 my-auto col-3">Фильтры</p>
-				<select name="category" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0;" class="form-select border-success col m-0" id="id_category">
-					<option value="" {% if not category_id %}selected=""{% endif %}>Все категории</option>
-					{% for category in categories %}
-						<option value="{{ category.id }}" {% if category.id == category_id %}selected=""{% endif %}>{{ category.title }}</option>
-					{% endfor %}
-				</select>
-				<select name="order-by" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0;" class="form-select border-success col m-0" id="id_category">
-					<option value="-pub_date" {% if "-pub_date" == order_by or order_by == "" %}selected=""{% endif %}>Сначала новые</option>
-					<option value="duration" {% if "duration" == order_by %}selected=""{% endif %}>Сначала быстрые</option>
-					<option value="-duration" {% if "-duration" == order_by %}selected=""{% endif %}>Сначала долгие</option>
-					<option value="pub_date" {% if "pub_date" == order_by %}selected=""{% endif %}>Сначала старые</option>
-				</select>
-				<button type="submit" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0 .65rem .65rem 0;" class="btn btn-outline-success col">Найти</button>
-			</div>
-		</form>
-			{% for recipe in recipes %}
-				<div style="min-width: 285px; width: 49%;" class="my-2 mx-1 col-4">
-					<a style="color: black;" href="{{ recipe.get_absolute_url }}">
-						<div style="background-color: white; min-height: 395px;" class="row mx-auto rounded shadow-sm">
-						{% if recipe.image %}
-							<img style="max-width: 392px; object-fit: cover; border-radius: .65rem .65rem 0 0" class="col-auto" src="{{ recipe.image.url }}">
-						{% else %}
-							<svg class="col-auto rounded" style="height: 200px; object-fit: cover;" width="392px" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e9ecef"></rect></svg>
-						{% endif %}
-							<div style="position: relative" class="card-body col-3">
-								<strong class="d-inline-block mb-2 text-success">{{ recipe.category }} • {{ recipe.national_cuisine }} • {{ recipe.get_duration_display }}</strong>
-								<h5 style="min-height: 50px;" class="card-title">{{ recipe.title|truncatewords:5 }}</h5>
-								<p class="card-text pb-3"><b>Продукты:</b> {{ recipe.ingredients.all|join:", "|truncatewords:7 }}.</p>
-								<div style="position: absolute; bottom: 0; right: 0;" class="m-3 d-flex">
-									<a href="{{ recipe.author.get_absolute_url }}" class="my-auto link-success mx-1">{{ recipe.author }}</a>
-									<small class="my-auto text-muted mx-1">{{ recipe.pub_date|date:"d/m/Y" }}</small>
-								</div>
-							</div>
+{% block recipe_list %}
+	<h1>Избранные рецепты</h1>
+	{% for recipe in recipes %}
+		<div style="min-width: 285px; width: 49%;" class="my-2 mx-1 col-4">
+			<a style="color: black;" href="{{ recipe.get_absolute_url }}">
+				<div style="background-color: white; min-height: 395px;" class="row mx-auto rounded shadow-sm">
+				{% if recipe.image %}
+					<img style="max-width: 392px; object-fit: cover; border-radius: .65rem .65rem 0 0" class="col-auto" src="{{ recipe.image.url }}">
+				{% else %}
+					<svg class="col-auto rounded" style="height: 200px; object-fit: cover;" width="392px" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e9ecef"></rect></svg>
+				{% endif %}
+					<div style="position: relative" class="card-body col-3">
+						<strong class="d-inline-block mb-2 text-success">{{ recipe.category }} • {{ recipe.national_cuisine }} • {{ recipe.get_duration_display }}</strong>
+						<h5 style="min-height: 50px;" class="card-title">{{ recipe.title|truncatewords:5 }}</h5>
+						<p class="card-text pb-3"><b>Продукты:</b> {{ recipe.ingredients.all|join:", "|truncatewords:7 }}.</p>
+						<div style="position: absolute; bottom: 0; right: 0;" class="m-3 d-flex">
+							<a href="{{ recipe.author.get_absolute_url }}" class="my-auto link-success mx-1">{{ recipe.author }}</a>
+							<small class="my-auto text-muted mx-1">{{ recipe.pub_date|date:"d/m/Y" }}</small>
 						</div>
-					</a>
+					</div>
 				</div>
-			{% endfor %}
+			</a>
 		</div>
-		{% if is_paginated %}
-			<div class="mt-5">
-				<nav class="mx-auto" aria-label="Page navigation example">
-					<ul class="pagination justify-content-center">
-						{% if page_obj.has_previous %}
-							<li class="page-item"><a class="page-link" href="{{ request.get_full_path }}{% if "?" in request.get_full_path %}&{% else %}?{% endif %}page={{ page_obj.previous_page_number }}">Назад</a></li>
-						{% else %}
-							<li class="page-item disabled"><a class="page-link">Назад</a></li>
-						{% endif %}
-						{% for num in page_obj.paginator.page_range %}
-						{% if num == page_obj.number %}
-							<li class="page-item active"><a class="page-link">{{ num }}</a></li>
-						{% else %}
-							<li class="page-item"><a class="page-link" href="{{ request.get_full_path }}{% if "?" in request.get_full_path %}&{% else %}?{% endif %}page={{ num }}">{{ num }}</a></li>
-						{% endif %}
-						{% endfor %}
-						{% if page_obj.has_next %}
-							<li class="page-item"><a class="page-link" href="{{ request.get_full_path }}{% if "?" in request.get_full_path %}&{% else %}?{% endif %}page={{ page_obj.next_page_number }}">Дальше</a></li>
-						{% else %}
-							<li class="page-item disabled"><a class="page-link">Дальше</a></li>
-						{% endif %}
-					</ul>
-				</nav>
-			</div>
-    	{% endif %}
+	{% endfor %}
 {% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'catalog/index.html' %}
+
+{% block recipes %}active{% endblock %}
+
+{% block content %}
+    <div style="max-width: 800px;" class="row mx-auto col">
+        <h1>Каталог рецептов</h1>
+        <form method="get">
+            <div style="background-color: white;" class="input-group mt-2">
+                <input class="form-control p-2" type="search" name="q" placeholder="Поиск рецептов" value="{{ query }}" aria-label="Search">
+            </div>
+            <div style="background-color: white;" class="rounded my-3 row">
+                <p style="font-size: 20px;" class="py-2 px-3 my-auto col-3">Фильтры</p>
+                <select name="category" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0;" class="form-select border-success col m-0" id="id_category">
+                    <option value="" {% if not category_id %}selected=""{% endif %}>Все категории</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if category.id == category_id %}selected=""{% endif %}>{{ category.title }}</option>
+                    {% endfor %}
+                </select>
+                <select name="order-by" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0;" class="form-select border-success col m-0" id="id_category">
+                    <option value="-pub_date" {% if "-pub_date" == order_by or order_by == "" %}selected=""{% endif %}>Сначала новые</option>
+                    <option value="duration" {% if "duration" == order_by %}selected=""{% endif %}>Сначала быстрые</option>
+                    <option value="-duration" {% if "-duration" == order_by %}selected=""{% endif %}>Сначала долгие</option>
+                    <option value="pub_date" {% if "pub_date" == order_by %}selected=""{% endif %}>Сначала старые</option>
+                </select>
+                <button type="submit" style="border-top: none; border-bottom: none; border-right: none; border-radius: 0 .65rem .65rem 0;" class="btn btn-outline-success col">Найти</button>
+            </div>
+        </form>
+        {% block recipe_list %}
+        {% endblock %}
+    </div>
+    {% if is_paginated %}
+        <div class="mt-5">
+            <nav class="mx-auto" aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}{% if "?" in request.get_full_path %}&{% else %}?{% endif %}page={{ page_obj.previous_page_number }}">Назад</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><a class="page-link">Назад</a></li>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                        <li class="page-item active"><a class="page-link">{{ num }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}{% if "?" in request.get_full_path %}&{% else %}?{% endif %}page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}{% if "?" in request.get_full_path %}&{% else %}?{% endif %}page={{ page_obj.next_page_number }}">Дальше</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><a class="page-link">Дальше</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    {% endif %}
+{% endblock %}
