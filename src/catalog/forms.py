@@ -1,7 +1,7 @@
 from django.forms import ModelForm, IntegerField
 from django.forms.models import modelformset_factory
 
-from src.catalog.models import Ingredient, Recipe, Direction
+from src.catalog.models import Food, Ingredient, Recipe, Direction
 
 
 class RecipeForm(ModelForm):
@@ -49,10 +49,10 @@ class IngredientForm(ModelForm):
     """Форма создания ингредиента"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["food"].widget.attrs.update({'class': "form-select"})
-        self.fields["amount"].widget.attrs.update({'class': "form-control"})
-        self.fields["unit"].widget.attrs.update({'class': "form-select"})
-    
+        self.fields["food"].widget.attrs.update({'class': "form-select", 'id': "foodSelect"})
+        self.fields["amount"].widget.attrs.update({'class': "form-control form-amount"})
+        self.fields["unit"].widget.attrs.update({'class': "form-select form-unit"})
+
     class Meta:
         model = Ingredient
         exclude = "recipe",

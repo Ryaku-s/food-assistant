@@ -1,10 +1,11 @@
+from django.http import JsonResponse
 from django.urls.base import reverse
 from django.views.generic import TemplateView, DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from src.base.selectors import RecipeSelector, get_directions_by_recipe_id, get_ingredients_by_recipe_id
 from src.catalog.services import HomepageService, RecipeService
-from src.catalog.models import Recipe
+from src.catalog.models import Food, Recipe
 from src.catalog.forms import IngredientFormSet, RecipeForm, DirectionFormSet
 from src.base.mixins import AuthorRequiredMixin, RecipeFilterMixin
 
@@ -26,7 +27,7 @@ class RecipeListView(RecipeFilterMixin, ListView):
     paginate_by = 10
 
 
-class UserRecipeListView(LoginRequiredMixin, RecipeFilterMixin, ListView):
+class UserRecipeListView(RecipeFilterMixin, ListView):
     template_name = 'catalog/user_recipe_list.html'
     model = Recipe
     context_object_name = 'recipes'
@@ -93,3 +94,10 @@ class RecipeDeleteView(AuthorRequiredMixin, DeleteView):
 
     def get_success_url(self) -> str:
         return reverse('homepage')
+
+
+def load_units(request):
+    """Загружает единицы измерения для выбранной еды (ajax)."""
+    food_id = int(request.GET.get("food_id"))
+    units = Food.objects.get(pk=food_id).units.all()
+    return JsonResponse(list(units.values('id', 'name')), safe=False)

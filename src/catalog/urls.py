@@ -10,4 +10,6 @@ urlpatterns = [
     path('catalog/<int:pk>/update', views.RecipeUpdateView.as_view(), name="recipe_update"),
     path('catalog/<int:pk>/delete', views.RecipeDeleteView.as_view(), name="recipe_delete"),
     path('catalog/authors/<int:author_id>/', views.UserRecipeListView.as_view(), name="user_recipe_list"),
+
+    path('ajax/load-units', views.load_units, name='ajax_load_units')
 ]

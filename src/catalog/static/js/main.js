@@ -14,6 +14,8 @@ function addIngredientForm() {
     newForm.setAttribute('form-number', newFormNumber);
     newForm.removeAttribute('style');
     newForm.id = "ingredientForm";
+    newForm.querySelector("#foodSelect").onchange = changeIngredientForm;
+    newForm.querySelector(".form-unit").onchange = changeUnitInput;
     ingredientFormSet.appendChild(newForm);
 }
 

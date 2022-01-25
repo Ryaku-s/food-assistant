@@ -1,7 +1,5 @@
 from django.contrib.auth.mixins import AccessMixin
 from django.db.models.query_utils import Q
-from django.http.response import Http404
-from django.utils.translation import gettext as _
 
 from src.base.selectors import get_categories
 
