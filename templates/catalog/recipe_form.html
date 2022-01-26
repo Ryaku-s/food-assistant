@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container my-5 row mx-auto">
   <div style="background-color: white; padding: min(3rem, 5%); max-width: 65%;" class="rounded border-top col border-success shadow-sm">
-    <form method="post" enctype="multipart/form-data">
+    <form id="recipeForm" method="post" enctype="multipart/form-data" url-load-units="{% url 'ajax_load_units' %}">
       {% csrf_token %}
       {% for message in messages %}
         {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
@@ -153,68 +153,9 @@
   </div>
   {% get_sidebar %}
 </div>
-<script src="{% static 'js/main.js' %}"></script>
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
-  const foodSelects = document.querySelectorAll("#foodSelect");
-  const unitSelects = document.querySelectorAll(".form-unit");
-
-  $(document).ready(() => {
-    for (select of document.querySelectorAll("select")) {
-      $(select).select2()
-    }
-  })
-  for (foodSelect of foodSelects) {
-    $(foodSelect).on("change", changeIngredientForm);
-  }
-
-  for (unitSelect of unitSelects) {
-    if (unitSelect.value == 4) {
-      unitSelect.parentNode.parentNode.querySelector(".form-amount").setAttribute("disabled", "")
-      unitSelect.parentNode.parentNode.querySelector(".form-amount").value = null;
-    } else {
-      unitSelect.parentNode.parentNode.querySelector(".form-amount").removeAttribute("disabled")
-    }
-    $(unitSelect).on("change", changeUnitInput)
-  };
-
-  function changeUnitInput(event) {
-    if (event.target.value == 4) {
-      event.target.parentNode.parentNode.querySelector(".form-amount").setAttribute("disabled", "")
-      event.target.parentNode.parentNode.querySelector(".form-amount").value = null;
-    } else {
-      event.target.parentNode.parentNode.querySelector(".form-amount").removeAttribute("disabled")
-    }
-  }
-
-  function changeIngredientForm() {
-      const number = this.parentNode.parentNode.getAttribute("form-number");
-      const foodId = $(this).val();
-
-      $.ajax({
-        url: "{% url 'ajax_load_units' %}",
-        data: {
-          'food_id': foodId
-        },
-        success: function (data) {
-          let selectHTML = "<option value=\"\" selected=\"\">---------</option>"
-          for (unit of data) {
-            selectHTML += `<option value="${unit.id}" selected="">${unit.name}</option>`
-          }
-          $(`#id_ingredient-${number}-unit`).html(selectHTML);
-          if ($(`#id_ingredient-${number}-unit`).val() == 4) {
-            document.querySelector(`#id_ingredient-${number}-unit`).parentNode.parentNode.querySelector(".form-amount").setAttribute("disabled", "")
-            document.querySelector(`#id_ingredient-${number}-unit`).parentNode.parentNode.querySelector(".form-amount").value = null;
-          } else {
-            document.querySelector(`#id_ingredient-${number}-unit`).parentNode.parentNode.querySelector(".form-amount").removeAttribute("disabled")
-          }
-        }
-      })
-  }
-</script>
+<script src="{% static 'js/main.js' %}"></script>
 {% endblock %}

@@ -1,4 +1,3 @@
-from django.db.models.query_utils import Q
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.contrib import messages
@@ -23,8 +22,8 @@ class HomepageService:
         }
 
     def execute(self):
-        user_recipes = RecipeSelector.get_recipes_by_author_id(author_id=self.request.user.id, limit=4)
-        recent_recipes = RecipeSelector.get_recent_recipes(limit=2)
+        user_recipes = RecipeSelector.get_current_user_recipes(request=self.request, limit=4)
+        recent_recipes = RecipeSelector.get_published_recipes(limit=2)
         user_subscriptions = get_user_subscriptions(user=self.request.user, limit=4)
         return self._build_context(user_recipes, recent_recipes, user_subscriptions)
 
@@ -61,9 +60,9 @@ class RecipeService:
             return timezone.timedelta(hours=hours, minutes=minutes)
         else:
             return timezone.timedelta(minutes=minutes)
-    
+
     @staticmethod
-    def _is_forms_valid(recipe_form, ingredient_formset, direction_formset):
+    def _are_forms_valid(recipe_form, ingredient_formset, direction_formset):
         return recipe_form.is_valid() and ingredient_formset.is_valid() and direction_formset.is_valid()
 
     def _save_recipe(self, form):
@@ -99,7 +98,7 @@ class RecipeService:
         recipe_form = self._get_recipe_form(instance)
         ingredient_formset = self._get_ingredient_formset()
         direction_formset = self._get_direction_formset()
-        if self._is_forms_valid(recipe_form, ingredient_formset, direction_formset):
+        if self._are_forms_valid(recipe_form, ingredient_formset, direction_formset):
             recipe = self._save_recipe(recipe_form)
             self._save_ingredients(ingredient_formset, recipe)
             self._save_directions(direction_formset, recipe)

@@ -62,7 +62,7 @@
 						{% endif %}
 						<p class="pb-3 mb-0 ms-2 small lh-sm">
 							<a href="{{ sub.user.get_absolute_url }}" style="font-weight: bolder;" class="d-block link-success">{{ sub.user.get_short_name }}</a>
-							{{ sub.user.description|truncatewords:10 }}
+							{{ sub.user.about|truncatewords:10 }}
 						</div>
 						<hr style="margin-left: 38px;" class="mt-0 bg-secondary">
 						{% endfor %}

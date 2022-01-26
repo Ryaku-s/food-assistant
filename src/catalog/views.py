@@ -34,6 +34,9 @@ class UserRecipeListView(RecipeFilterMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        if self.request.user.is_active:
+            if self.request.user.id == self.kwargs['author_id']:
+                return RecipeSelector.get_current_user_recipes(self.request)
         return RecipeSelector.get_recipes_by_author_id(self.kwargs['author_id'])
 
 
@@ -50,11 +53,13 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['direction_formset'] = DirectionFormSet(prefix='direction', queryset=get_directions_by_recipe_id())
-        context['ingredient_formset'] = IngredientFormSet(prefix='ingredient', queryset=get_ingredients_by_recipe_id())
+        if self.request.method != 'POST':
+            context['direction_formset'] = DirectionFormSet(prefix='direction', queryset=get_directions_by_recipe_id())
+            context['ingredient_formset'] = IngredientFormSet(prefix='ingredient', queryset=get_ingredients_by_recipe_id())
         return context
 
     def post(self, request, *args, **kwargs):
+        self.object = None
         return RecipeService(request).execute(self)
 
 

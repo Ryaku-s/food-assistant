@@ -48,7 +48,7 @@
           {% endif %}
         {% endif %}
       </div>
-      <strong class="d-inline-block mb-2 text-success">{{ recipe.category }} • {{ recipe.national_cuisine }} • {{ recipe.get_duration_display }} • {{ recipe.pub_date|date:"d/m/Y" }}</strong>
+      <strong class="d-inline-block mb-2 text-success">{{ recipe.category }} • {{ recipe.national_cuisine }} • {{ recipe.get_duration_display }} • {{ recipe.pub_date|date:"d/m/Y" }} • <a class="link-success" href={{ recipe.author.get_absolute_url }}>{{ recipe.author.get_short_name }}</a></strong>
       {% if recipe.image %}
         <div class="col-auto d-lg-block p-0 mb-5 mt-4">
           <img style="border-radius: .2rem;" width="100%" src="{{ recipe.image.url }}">
@@ -56,9 +56,15 @@
       {% else %}
 				<svg class="col-auto d-lg-block p-0 mb-5 mt-4" style="border-radius: .2rem; height: 413px" width="826px" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e9ecef"></rect></svg>
       {% endif %}
-      <p>{{ recipe.description }}</p>
+      <p>{{ recipe.description|linebreaks }}</p>
       <h5>Ингредиенты</h5>
-      <p>{{ recipe.ingredients.all|join:", "}}.</p>
+      <div>
+        <ul>
+          {% for ingredient in recipe.ingredients.all %}
+            <li class="my-1">{{ ingredient }}</li>
+          {% endfor %}
+        </ul>
+      </div>
       <h5 class="mb-3">Указания к рецепту</h5>
       {% for direction in recipe.directions.all %}
         <div class="row mb-3">

@@ -21,7 +21,9 @@
       </div>
       <div class="row">
         <div class="col-sm-3 my-2">
-          <img style="object-fit: cover; max-width: 125px;" width="125px" height="125px" class="rounded-circle avatar" src="{{ user.avatar.url }}">
+          {% if user.avatar %}
+            <img style="object-fit: cover; max-width: 125px;" width="125px" height="125px" class="rounded-circle avatar" src="{{ user.avatar.url }}">
+          {% endif %}
         </div>
         <div class="col-sm-8 my-auto">
           <div class="col-sm-12 row mx-auto my-2">

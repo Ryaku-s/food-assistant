@@ -41,17 +41,19 @@ class RecipeSelector:
         return queryset
 
     @classmethod
-    def get_recent_recipes(cls, limit: int = None):
-        queryset = cls.get_published_recipes()
-        if limit:
-            return queryset[:limit]
-        return queryset
-
-    @staticmethod
-    def get_recipes_by_author_id(author_id, limit: int = None):
+    def get_recipes_by_author_id(cls, author_id, limit: int = None):
         author = get_user_by_pk(author_id)
         if author.is_active:
-            queryset = Recipe.objects.filter(author__id=author_id)
+            queryset = cls.get_published_recipes().filter(author__id=author_id)
+            if limit:
+                return queryset[:limit]
+            return queryset
+    
+    @staticmethod
+    def get_current_user_recipes(request, limit: int = None):
+        user = request.user
+        if user.is_active:
+            queryset = Recipe.objects.filter(author__id=user.id)
             if limit:
                 return queryset[:limit]
             return queryset
