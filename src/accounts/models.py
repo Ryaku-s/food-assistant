@@ -17,6 +17,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         "Аватар",
         size=[250, 250],
         crop=['middle', 'center'],
+        blank=True,
+        null=True,
         upload_to=get_avatar_upload_path,
         validators=[validators.FileExtensionValidator(allowed_extensions=['jpeg', 'jpg', 'png'])]
     )

@@ -29,6 +29,3 @@ class TestUserModel(TestCase):
         self.assertEqual(self.user.get_short_name(), "test_recipe_model@test.ru")
         self.user.display_name = "User Display Name"
         self.assertEqual(self.user.get_short_name(), "User Display Name")
-    
-    def tearDown(self):
-        User.objects.get(email="test_recipe_model@test.ru").delete()

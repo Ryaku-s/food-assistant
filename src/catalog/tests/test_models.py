@@ -43,11 +43,6 @@ class TestRecipeModel(TestCase):
     
     def test_str(self):
         self.assertEqual(str(self.recipe), "Recipe Title")
-    
-    def tearDown(self):
-        User.objects.get(email="test_recipe_model@test.ru").delete()
-        Category.objects.get(title="Category Title").delete()
-        NationalCuisine.objects.get(title="National Cuisine Title").delete()
 
 
 class TestIngredientModel(TestCase):
@@ -80,11 +75,3 @@ class TestIngredientModel(TestCase):
         self.assertEqual(str(self.ingredient), "Food Title - 15 Unit Name")
         self.ingredient.amount = 0
         self.assertEqual(str(self.ingredient), "Food Title - Unit Name")
-    
-    def tearDown(self):
-        User.objects.get(email="test_recipe_model@test.ru").delete()
-        Category.objects.get(title="Category Title").delete()
-        NationalCuisine.objects.get(title="National Cuisine Title").delete()
-        Food.objects.get(title="Food Title").delete()
-        Unit.objects.get(name="Unit Name").delete()
-        self.ingredient.delete()

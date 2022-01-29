@@ -2,7 +2,6 @@ from django.db import models
 from django.core import validators
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-
 from django_resized import ResizedImageField
 from positions.fields import PositionField
 

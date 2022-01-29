@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 
 from src.catalog.models import Category, Direction, Ingredient, Recipe
 from src.favorites.models import Favorites
@@ -8,7 +9,7 @@ User = get_user_model()
 
 
 def get_user_by_pk(pk: int):
-    return User.objects.get(pk=pk)
+    return get_object_or_404(User, pk=pk, is_active=True)
 
 
 def get_user_subscriptions(user, limit: int = None):
@@ -20,7 +21,8 @@ def get_user_subscriptions(user, limit: int = None):
 
 
 def get_or_create_follower(user, subscriber):
-    return Follower.objects.get_or_create(user=user, subscriber=subscriber)[0]
+    if user != subscriber:
+        return Follower.objects.get_or_create(user=user, subscriber=subscriber)[0]
 
 
 def get_or_create_favorites(user):
@@ -35,7 +37,7 @@ class RecipeSelector:
 
     @staticmethod
     def get_published_recipes(limit: int = None):
-        queryset = Recipe.objects.filter(is_draft=False)
+        queryset = Recipe.objects.filter(is_draft=False, author__is_active=True)
         if limit:
             return queryset[:limit]
         return queryset

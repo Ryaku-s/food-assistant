@@ -1,4 +1,5 @@
 from django.views.generic import View, ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from src.catalog.models import Recipe
 from src.base.selectors import RecipeSelector
@@ -6,7 +7,7 @@ from src.base.mixins import RecipeFilterMixin
 from src.favorites.services import add_recipe_to_favorites, remove_recipe_from_favorites
 
 
-class FavoriteRecipesListView(RecipeFilterMixin, ListView):
+class FavoriteRecipeListView(LoginRequiredMixin, RecipeFilterMixin, ListView):
     template_name = "catalog/favorite_recipe_list.html"
     model = Recipe
     context_object_name = "recipes"

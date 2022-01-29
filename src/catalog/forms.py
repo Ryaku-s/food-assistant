@@ -1,7 +1,7 @@
 from django.forms import ModelForm, IntegerField
 from django.forms.models import modelformset_factory
 
-from src.catalog.models import Food, Ingredient, Recipe, Direction
+from src.catalog.models import Ingredient, Recipe, Direction
 
 
 class RecipeForm(ModelForm):

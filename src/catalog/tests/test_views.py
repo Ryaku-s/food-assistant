@@ -58,13 +58,6 @@ class RecipeListViewTest(TestCase):
         self.assertTrue(response.context["is_paginated"] == True)
         self.assertEqual(len(response.context["recipes"]), 1)
 
-    def tearDown(self) -> None:
-        User.objects.get(email="test_views@test.ru").delete()
-        for category in Category.objects.all():
-            category.delete()
-        for national_cuisine in NationalCuisine.objects.all():
-            national_cuisine.delete()
-
 
 class UserRecipeListViewTest(TestCase):
 
@@ -124,14 +117,6 @@ class UserRecipeListViewTest(TestCase):
         response = self.client.get(reverse("user_recipe_list", kwargs={'author_id': author.id}))
         self.assertEqual(len(response.context["recipes"]), 1)
 
-    def tearDown(self) -> None:
-        User.objects.get(email="test_views@test.ru").delete()
-        User.objects.get(email="test_views_0@test.ru").delete()
-        for category in Category.objects.all():
-            category.delete()
-        for national_cuisine in NationalCuisine.objects.all():
-            national_cuisine.delete()
-
 
 class RecipeDetailViewTest(TestCase):
 
@@ -172,13 +157,6 @@ class RecipeDetailViewTest(TestCase):
         ))
         self.assertEqual(response.status_code, 404)
 
-    def tearDown(self):
-        User.objects.get(email="test_views@test.ru").delete()
-        for category in Category.objects.all():
-            category.delete()
-        for national_cuisine in NationalCuisine.objects.all():
-            national_cuisine.delete()
-
 
 class RecipeCreateViewTest(TestCase):
 
@@ -205,9 +183,6 @@ class RecipeCreateViewTest(TestCase):
         response = self.client.get(reverse("recipe_create"))
         self.assertTrue("ingredient_formset" in response.context)
         self.assertTrue("direction_formset" in response.context)
-
-    def tearDown(self):
-        User.objects.get(email="test_views@test.ru").delete()
 
 
 class RecipeUpdateViewTest(TestCase):
@@ -255,12 +230,6 @@ class RecipeUpdateViewTest(TestCase):
         response = self.client.get(reverse("recipe_update", kwargs={'pk': Recipe.objects.get(title="Recipe Title").id}))
         self.assertTemplateUsed(response, "catalog/recipe_form.html")
 
-    def tearDown(self):
-        User.objects.get(email="test_views@test.ru").delete()
-        User.objects.get(email="test_views_0@test.ru").delete()
-        Category.objects.get(title="Category Title").delete()
-        NationalCuisine.objects.get(title="National Cuisine Title").delete()
-
 
 class RecipeDeleteViewTest(TestCase):
 
@@ -305,9 +274,3 @@ class RecipeDeleteViewTest(TestCase):
         self.client.login(email="test_views@test.ru", password="password")
         response = self.client.post(reverse("recipe_delete", kwargs={'pk': Recipe.objects.get(title="Recipe Title").id}))
         self.assertRedirects(response, reverse("homepage"))
-
-    def tearDown(self):
-        User.objects.get(email="test_views@test.ru").delete()
-        User.objects.get(email="test_views_0@test.ru").delete()
-        Category.objects.get(title="Category Title").delete()
-        NationalCuisine.objects.get(title="National Cuisine Title").delete()

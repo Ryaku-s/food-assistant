@@ -19,4 +19,6 @@ def remove_user_from_subscriptions(request, pk):
 
 def is_followed(request, user):
     """Проверяет подписан ли текущий пользователь на данного."""
-    return user.followers.filter(subscriber=request.user).exists()
+    if request.user.is_active:
+        return user.followers.filter(subscriber=request.user).exists()
+    return False
