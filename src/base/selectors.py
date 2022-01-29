@@ -9,7 +9,7 @@ User = get_user_model()
 
 
 def get_user_by_pk(pk: int):
-    return get_object_or_404(User, pk=pk, is_active=True)
+    return get_object_or_404(User, pk=pk)
 
 
 def get_user_subscriptions(user, limit: int = None):

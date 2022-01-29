@@ -8,7 +8,7 @@
 <div class="container my-5 row">
     <div style="background-color: white; padding: min(3rem, 5%); " class="rounded border-top col-sm-6 mx-auto border-success shadow-sm">
         <div class="mx-auto row col-sm-12">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% if form.errors %}
                     <div>
@@ -22,11 +22,6 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-                {% comment %} {% for message in messages %}
-                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                    <div class='alert alert-danger'>{{ message }}</div>
-                    {% endif %}
-                {% endfor %} {% endcomment %}
                 {{ form.as_p }}
                 <button class="btn btn-outline-success mt-3" type="submit">Сохранить</button>
                 <a href="{% url "account_profile_settings" %}" class="btn btn-outline-secondary mt-3">Отмена</a>
