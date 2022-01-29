@@ -10,22 +10,33 @@
     <div class="mx-auto row col-sm-12">
       <div style="position:relative;">
         <span class="h3 mb-2">Основная информация</span>
-        {% if request.user.is_active and user.is_active and user != request.user %}
+          {% if request.user.is_active and user.is_active and user != request.user %}
             {% if is_followed %}
-              <form action="{% url 'account_profile_unfollow' pk=user.pk %}" method="post">
+              <form action="{% url 'account_profile_unfollow' pk=user.pk %}" method="post" class="top-0 end-0 position-absolute d-flex">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger h1" style="right: 0; top: 0; position: absolute;">
+                <button type="submit" class="btn btn-outline-danger" style="border-radius: .25rem 0 0 .25rem">
                   Отписаться
                 </button>
+                <div style="border-radius: 0 .25rem .25rem 0; border-left: none;" class="btn btn-outline-secondary disabled">{{ user.followers.count }}</div>
               </from>
             {% else %}
-              <form action="{% url 'account_profile_follow' pk=user.pk %}" method="post">
+              <form action="{% url 'account_profile_follow' pk=user.pk %}" method="post" class="top-0 end-0 position-absolute d-flex">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-outline-success h1" style="right: 0; top: 0; position: absolute;">
+                <button type="submit" class="btn btn-outline-success" style="border-radius: .25rem 0 0 .25rem">
                   Подписаться
                 </button>
+                <div style="border-radius: 0 .25rem .25rem 0; border-left: none;" class="btn btn-outline-secondary disabled">{{ user.followers.count }}</div>
               </form>
             {% endif %}
+          {% endif %}
+          {% if user.is_active and user == request.user %}
+            <div action="{% url 'account_profile_follow' pk=user.pk %}" method="post" class="top-0 end-0 position-absolute d-flex">
+              {% csrf_token %}
+              <div type="submit" class="btn btn-outline-success disabled" style="border-radius: .25rem 0 0 .25rem">
+                Подписаться
+              </div>
+              <div style="border-radius: 0 .25rem .25rem 0; border-left: none;" class="btn btn-outline-secondary disabled">{{ user.followers.count }}</div>
+            </div>
           {% endif %}
       </div>
       {% if user.is_active %}

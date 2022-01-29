@@ -6,7 +6,7 @@
 - Django
 - JavaScript
 - JQuery
-- postgres 12
+- PostgreSQL
 - Bootstrap 5
 ### Функционал
 - Создание / Изменение / Удаление своих рецептов любым пользователем
