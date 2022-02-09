@@ -63,7 +63,8 @@ const unitSelects = document.querySelectorAll(".form-unit");
 
 // Отключение поля количества, если "на вкус"
 function disableAmountInput(unitSelect) {
-    if ($(unitSelect).val() == 4) {
+    option = unitSelect.options[unitSelect.selectedIndex];
+    if (option.getAttribute('countable') == 'false') {
         unitSelect.parentNode.parentNode.querySelector(".form-amount").setAttribute("disabled", "");
         unitSelect.parentNode.parentNode.querySelector(".form-amount").value = null;
     } else {
@@ -100,7 +101,7 @@ function changeUnitQueryset() {
         success: function (data) {
             let selectHTML = "<option value=\"\" selected=\"\">---------</option>"
             for (unit of data) {
-                selectHTML += `<option value="${unit.id}">${unit.name}</option>`
+                selectHTML += `<option countable="${unit.is_countable}" value="${unit.id}">${unit.name}</option>`
             }
             $(`#id_ingredient-${number}-unit`).html(selectHTML);
         }

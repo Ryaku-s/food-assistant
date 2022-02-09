@@ -118,6 +118,7 @@ class Food(models.Model):
 
 class Unit(models.Model):
     name = models.CharField("Обозначение единицы измерения", max_length=25)
+    is_countable = models.BooleanField('Исчислемая')
 
     class Meta:
         verbose_name = "Единица измерения"

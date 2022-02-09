@@ -105,4 +105,4 @@ def load_units(request):
     """Загружает единицы измерения для выбранной еды (ajax)."""
     food_id = int(request.GET.get("food_id"))
     units = Food.objects.get(pk=food_id).units.all()
-    return JsonResponse(list(units.values('id', 'name')), safe=False)
+    return JsonResponse(list(units.values('id', 'name', 'is_countable')), safe=False)
