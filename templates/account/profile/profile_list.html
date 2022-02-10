@@ -1,0 +1,52 @@
+{% extends 'catalog/index.html' %}
+
+{% block subscriptions %}active{% endblock %}
+
+{% block content %}
+	<div style="max-width: 800px;" class="row mx-auto">
+		<h1>Ваши подписки</h1>
+		{% for sub in subscriptions %}
+			<div style="min-width: 285px; width: 32%;" class="my-2 mx-1 col-4">
+				<a style="color: black;" href="{{ sub.user.get_absolute_url }}">
+					<div style="background-color: white; min-height: 395px;" class="row mx-auto rounded shadow-sm">
+					{% if sub.user.avatar %}
+						<img style="width: 392px; object-fit: cover; overflow: hidden; border-radius: .65rem .65rem 0 0" class="col-auto" src="{{ sub.user.avatar.url }}">
+					{% else %}
+						<svg class="height: 392px; col-auto rounded" style="object-fit: cover;" width="392px" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e9ecef"></rect></svg>
+					{% endif %}
+						<div style="position: relative" class="card-body col-3">
+							<strong class="d-inline-block mb-2 text-success">{{ sub.user.last_login|date:"d/m/Y • H:i" }}</strong>
+							<h5 style="font-size: 17px;" class="card-title">{{ sub.user.get_short_name }}</h5>
+							<p class="text-muted">{{ sub.user.about|truncatewords:10 }}</p>
+						</div>
+					</div>
+				</a>
+			</div>
+		{% endfor %}
+	</div>
+    {% if is_paginated %}
+        <div class="mt-5">
+            <nav class="mx-auto" aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}{% if "?" in request.get_full_path %}&{% else %}?{% endif %}page={{ page_obj.previous_page_number }}">Назад</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><a class="page-link">Назад</a></li>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                        <li class="page-item active"><a class="page-link">{{ num }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}{% if "?" in request.get_full_path %}&{% else %}?{% endif %}page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="{{ request.get_full_path }}{% if "?" in request.get_full_path %}&{% else %}?{% endif %}page={{ page_obj.next_page_number }}">Дальше</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><a class="page-link">Дальше</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    {% endif %}
+{% endblock %}

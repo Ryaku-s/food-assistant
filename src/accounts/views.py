@@ -1,16 +1,27 @@
 from django.urls.base import reverse
-from django.views.generic import View, DetailView, UpdateView
+from django.views.generic import View, DetailView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 
 from src.accounts.forms import UserProfileForm
+from src.accounts.models import Follower
 from src.accounts.services import add_user_to_subscriptions, remove_user_from_subscriptions, is_followed
-from src.base.selectors import RecipeSelector
+from src.base.selectors import RecipeSelector, get_user_subscriptions
 
 User = get_user_model()
 
 
-class ProfileView(DetailView):
+class SubscriptionListView(ListView):
+    template_name = "account/profile/profile_list.html"
+    models = Follower
+    context_object_name = "subscriptions"
+    paginate_by = 10
+    
+    def get_queryset(self):
+        return get_user_subscriptions(self.request.user)
+
+
+class ProfileDetailView(DetailView):
     template_name = "account/profile/profile_detail.html"
     model = User
 
