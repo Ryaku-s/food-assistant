@@ -4,7 +4,6 @@ from django.utils import timezone
 from django.contrib import messages
 
 from src.catalog.repositories import RecipeRepository
-from src.base.repositories import get_user_subscriptions
 from src.catalog.forms import IngredientFormSet, RecipeForm, DirectionFormSet
 
 
@@ -12,14 +11,13 @@ def get_homepage_context(request: HttpRequest):
     return {
         'user_recipes': RecipeRepository.filter(
             4,
-            is_draft=False,
             author=request.user
         ) if request.user.is_active else None,
         'recent_recipes': RecipeRepository.filter(
             2,
             is_draft=False
         ),
-        'user_subscriptions': get_user_subscriptions(user=request.user, limit=4)
+        'user_subscriptions': request.user.subscriptions.all()[:4]
     }
 
 

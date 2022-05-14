@@ -1,5 +1,5 @@
 from src.base.repositories import ModelRepository
-from src.catalog.models import Direction, Ingredient, Recipe
+from src.catalog.models import Category, Direction, Ingredient, NationalCuisine, Recipe
 
 
 class RecipeRepository(ModelRepository):
@@ -17,6 +17,14 @@ class RecipeRepository(ModelRepository):
             'author__is_active',
         ).filter(*args, **kwargs)
         return queryset[:limit] if limit else queryset
+
+
+class CategoryRepository(ModelRepository):
+    model = Category
+
+
+class NationalCuisineRepository(ModelRepository):
+    model = NationalCuisine
 
 
 class DirectionRepository(ModelRepository):

@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import AccessMixin
 from django.db.models.query_utils import Q
 
-from src.base.repositories import get_categories
+from src.catalog.repositories import CategoryRepository
 
 
 class AuthorRequiredMixin(AccessMixin):
@@ -33,7 +33,7 @@ class RecipeFilterMixin:
         context = super().get_context_data(**kwargs)
         context["query"] = self.request.GET.get("q", "")
         context["order_by"] = self.request.GET.get("order-by", "-pub_date")
-        context["categories"] = get_categories()
+        context["categories"] = CategoryRepository.all()
         if self.request.GET.get("category"):
             context["category_id"] = int(self.request.GET.get("category"))
         return context

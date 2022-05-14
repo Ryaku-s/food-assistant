@@ -1,19 +1,21 @@
 from django.shortcuts import redirect
 
-from src.base.repositories import get_user_by_pk, get_or_create_follower
+from src.accounts.repositories import FollowerRepository, UserRepository
 
 
 def add_user_to_subscriptions(request, pk):
     subscriber = request.user
-    user = get_user_by_pk(pk)
-    get_or_create_follower(user, subscriber)
+    user = UserRepository.get_object_or_404(pk=pk)
+    FollowerRepository.get_or_create(user=user, subscriber=subscriber)
     return redirect(user)
 
 
 def remove_user_from_subscriptions(request, pk):
     subscriber = request.user
-    user = get_user_by_pk(pk)
-    get_or_create_follower(user, subscriber).delete()
+    user = UserRepository.get_object_or_404(pk=pk)
+    follower = FollowerRepository.get_object_or_none(user=user, subscriber=subscriber)
+    if follower:
+        follower.delete()
     return redirect(user)
 
 

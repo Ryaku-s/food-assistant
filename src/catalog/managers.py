@@ -8,7 +8,7 @@ class RecipeManager(Manager):
             'category',
             'national_cuisine',
             'author'
-        ).prefetch_related('ingredients')
+        )
 
 
 class IngredientManager(Manager):

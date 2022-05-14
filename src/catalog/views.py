@@ -37,6 +37,16 @@ class UserRecipeListView(RecipeFilterMixin, generic.ListView):
         return RecipeRepository.filter(is_draft=False, author__id=self.kwargs['pk'])
 
 
+class CurrentUserRecipeListView(RecipeFilterMixin, generic.ListView):
+    template_name = 'catalog/user_recipe_list.html'
+    model = Recipe
+    context_object_name = 'recipes'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return RecipeRepository.filter(is_draft=False, author__id=self.request.user.id)
+
+
 class RecipeDetailView(generic.DetailView):
     template_name = 'catalog/recipe_detail.html'
     model = Recipe

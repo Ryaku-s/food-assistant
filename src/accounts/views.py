@@ -6,8 +6,8 @@ from django.contrib.auth import get_user_model
 from src.accounts.forms import UserProfileForm
 from src.accounts.models import Follower
 from src.accounts.services import add_user_to_subscriptions, remove_user_from_subscriptions, is_followed
+from src.accounts.repositories import UserRepository
 from src.catalog.repositories import RecipeRepository
-from src.base.repositories import get_user_subscriptions
 
 User = get_user_model()
 
@@ -19,7 +19,8 @@ class SubscriptionListView(ListView):
     paginate_by = 10
     
     def get_queryset(self):
-        return get_user_subscriptions(self.request.user)
+        if self.request.user.is_active:
+            return self.request.user.subscriptions.all()
 
 
 class ProfileDetailView(DetailView):
