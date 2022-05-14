@@ -1,31 +1,26 @@
+from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.contrib import messages
 
-from src.base.selectors import RecipeSelector, get_user_subscriptions
+from src.catalog.repositories import RecipeRepository
+from src.base.repositories import get_user_subscriptions
 from src.catalog.forms import IngredientFormSet, RecipeForm, DirectionFormSet
 
 
-class HomepageService:
-
-    __slots__ = 'request',
-
-    def __init__(self, request) -> None:
-        self.request = request
-
-    @staticmethod
-    def _build_context(user_recipes, recent_recipes, user_subscriptions):
-        return {
-            "user_recipes": user_recipes,
-            "recent_recipes": recent_recipes,
-            "user_subscriptions": user_subscriptions
-        }
-
-    def execute(self):
-        user_recipes = RecipeSelector.get_current_user_recipes(request=self.request, limit=4)
-        recent_recipes = RecipeSelector.get_published_recipes(limit=2)
-        user_subscriptions = get_user_subscriptions(user=self.request.user, limit=4)
-        return self._build_context(user_recipes, recent_recipes, user_subscriptions)
+def get_homepage_context(request: HttpRequest):
+    return {
+        'user_recipes': RecipeRepository.filter(
+            4,
+            is_draft=False,
+            author=request.user
+        ) if request.user.is_active else None,
+        'recent_recipes': RecipeRepository.filter(
+            2,
+            is_draft=False
+        ),
+        'user_subscriptions': get_user_subscriptions(user=request.user, limit=4)
+    }
 
 
 class RecipeService:

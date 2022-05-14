@@ -6,7 +6,8 @@ from django.contrib.auth import get_user_model
 from src.accounts.forms import UserProfileForm
 from src.accounts.models import Follower
 from src.accounts.services import add_user_to_subscriptions, remove_user_from_subscriptions, is_followed
-from src.base.selectors import RecipeSelector, get_user_subscriptions
+from src.catalog.repositories import RecipeRepository
+from src.base.repositories import get_user_subscriptions
 
 User = get_user_model()
 
@@ -28,7 +29,10 @@ class ProfileDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["is_followed"] = is_followed(self.request, self.object)
-        context["recipes"] = RecipeSelector.get_recipes_by_author_id(self.object.id, 2)
+        context["recipes"] = RecipeRepository.filter(
+            2,
+            author__id=self.object.id
+        )
         return context
 
 

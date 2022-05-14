@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 
-from src.base.selectors import get_user_by_pk, get_or_create_follower
+from src.base.repositories import get_user_by_pk, get_or_create_follower
 
 
 def add_user_to_subscriptions(request, pk):

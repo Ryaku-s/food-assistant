@@ -69,7 +69,7 @@
     <div class="mx-auto row col-sm-12 position-relative">
         <h3>Рецепты</h3>
         {% if recipes %}
-        <a href="{% url 'user_recipe_list' author_id=user.pk %}" style="right: 0; width: fit-content;" class="position-absolute link-success mt-2">Показать все...</a>
+        <a href="{% url 'user_recipe_list' pk=user.pk %}" style="right: 0; width: fit-content;" class="position-absolute link-success mt-2">Показать все...</a>
           <div class="row g-2">
             {% for recipe in recipes %}
               <div style="min-width: 285px;" class="my-2 col-sm-6">

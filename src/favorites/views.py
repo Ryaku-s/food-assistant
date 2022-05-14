@@ -2,9 +2,9 @@ from django.views.generic import View, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from src.catalog.models import Recipe
-from src.base.selectors import RecipeSelector
+from src.base.repositories import RecipeSelector
 from src.base.mixins import RecipeFilterMixin
-from src.favorites.services import add_recipe_to_favorites, remove_recipe_from_favorites
+from src.favorites import services
 
 
 class FavoriteRecipeListView(LoginRequiredMixin, RecipeFilterMixin, ListView):
@@ -18,12 +18,10 @@ class FavoriteRecipeListView(LoginRequiredMixin, RecipeFilterMixin, ListView):
 
 
 class AddRecipeToFavorites(View):
-
     def post(self, request, pk, *args, **kwargs):
-        return add_recipe_to_favorites(request, pk)
+        return services.add_recipe_to_favorites(request, pk)
 
 
 class RemoveRecipeFromFavorites(View):
-
     def post(self, request, pk, *args, **kwargs):
-        return remove_recipe_from_favorites(request, pk)
+        return services.remove_recipe_from_favorites(request, pk)

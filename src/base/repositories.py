@@ -1,3 +1,6 @@
+from typing import Optional, Type
+
+from django.db.models import Model, QuerySet
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
@@ -6,6 +9,36 @@ from src.favorites.models import Favorites
 from src.accounts.models import Follower
 
 User = get_user_model()
+
+
+class ModelRepository:
+    model: Type[Model]
+
+    @classmethod
+    def all(cls, limit: Optional[int] = None) -> QuerySet:
+        queryset = cls.model.objects.all()
+        return queryset[:limit] if limit else queryset
+
+    @classmethod
+    def filter(cls, limit: Optional[int] = None, *args, **kwargs) -> QuerySet:
+        queryset = cls.model.objects.filter(*args, **kwargs)
+        return queryset[:limit] if limit else queryset
+
+    @classmethod
+    def get(cls, *args, **kwargs) -> Model:
+        return cls.model.objects.get(*args, **kwargs)
+
+    @classmethod
+    def get_object_or_404(cls, *args, **kwargs) -> Model:
+        return get_object_or_404(cls.model, *args, **kwargs)
+
+    @classmethod
+    def get_or_create(cls, **kwargs) -> Model:
+        return cls.model.objects.get_or_create(**kwargs)[0]
+
+    @classmethod
+    def none(cls):
+        return cls.model.objects.none()
 
 
 def get_user_by_pk(pk: int):
@@ -67,15 +100,3 @@ class RecipeSelector:
         if limit:
             return queryset[:limit]
         return queryset
-
-
-def get_ingredients_by_recipe_id(recipe_id: int = None):
-    if recipe_id:
-        return Ingredient.objects.filter(recipe_id=recipe_id)
-    return Ingredient.objects.none()
-
-
-def get_directions_by_recipe_id(recipe_id: int = None):
-    if recipe_id:
-        return Direction.objects.filter(recipe_id=recipe_id)
-    return Direction.objects.none()

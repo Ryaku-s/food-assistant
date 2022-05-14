@@ -1,11 +1,12 @@
 from django.shortcuts import redirect
 
-from src.base.selectors import RecipeSelector, get_or_create_favorites
+from src.base.repositories import get_or_create_favorites
+from src.catalog.repositories import RecipeRepository
 
 
 def add_recipe_to_favorites(request, pk):
     favorites = get_or_create_favorites(request.user)
-    recipe = RecipeSelector.get_published_recipes().get(pk=pk)
+    recipe = RecipeRepository.filter(is_draft=False, pk=pk)
     if not recipe in favorites.recipes.all():
         favorites.recipes.add(recipe)
     return redirect(recipe)
@@ -13,7 +14,7 @@ def add_recipe_to_favorites(request, pk):
 
 def remove_recipe_from_favorites(request, pk):
     favorites = get_or_create_favorites(request.user)
-    recipe = RecipeSelector.get_published_recipes().get(pk=pk)
+    recipe = RecipeRepository.filter(is_draft=False, pk=pk)
     if recipe in favorites.recipes.all():
         favorites.recipes.remove(recipe)
     return redirect(recipe)

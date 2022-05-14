@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import AccessMixin
 from django.db.models.query_utils import Q
 
-from src.base.selectors import get_categories
+from src.base.repositories import get_categories
 
 
 class AuthorRequiredMixin(AccessMixin):

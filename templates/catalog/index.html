@@ -66,7 +66,7 @@
 	          <a class="nav-link" href="{% url 'recipe_create' %}">Новый рецепт</a>
 	        </li>
 			<li class="nav-item">
-	          <a class="nav-link {% block user_recipes %}{% endblock %}" href="{% url 'user_recipe_list' author_id=request.user.pk %}">Ваши рецепты</a>
+	          <a class="nav-link {% block user_recipes %}{% endblock %}" href="{% url 'user_recipe_list' pk=request.user.pk %}">Ваши рецепты</a>
 	        </li>
 			<li class="nav-item">
 				<a class="nav-link {% block subscriptions %}{% endblock %}" href="{% url 'account_subscriptions' %}">Подписки</a>
