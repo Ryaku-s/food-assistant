@@ -3,11 +3,9 @@ from django.views.generic import View, DetailView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 
-from src.accounts.forms import UserProfileForm
+from src.accounts import services
 from src.accounts.models import Follower
-from src.accounts.services import add_user_to_subscriptions, remove_user_from_subscriptions, is_followed
-from src.accounts.repositories import UserRepository
-from src.catalog.repositories import RecipeRepository
+from src.accounts.forms import UserProfileForm
 
 User = get_user_model()
 
@@ -29,24 +27,19 @@ class ProfileDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_followed"] = is_followed(self.request, self.object)
-        context["recipes"] = RecipeRepository.filter(
-            2,
-            author__id=self.object.id
-        )
-        return context
+        return services.get_profile_detail_context_data(context, self.request, self.object)
 
 
 class AddProfileToSubscriptions(View):
 
     def post(self, request, pk, *args, **kwargs):
-        return add_user_to_subscriptions(request, pk)
+        return services.add_user_to_subscriptions(request, pk)
 
 
 class RemoveProfileFromSubscriptions(View):
 
     def post(self, request, pk, *args, **kwargs):
-        return remove_user_from_subscriptions(request, pk)
+        return services.remove_user_from_subscriptions(request, pk)
 
 
 class ProfileSettingsView(LoginRequiredMixin, DetailView):

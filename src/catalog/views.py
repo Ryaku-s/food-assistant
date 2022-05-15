@@ -4,10 +4,10 @@ from django.http import JsonResponse, HttpRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from src.base.mixins import AuthorRequiredMixin, RecipeFilterMixin
+from src.catalog import services
+from src.catalog.forms import RecipeForm
 from src.catalog.models import Food, Recipe
-from src.catalog.services import RecipeService, get_homepage_context
-from src.catalog.repositories import DirectionRepository, IngredientRepository, RecipeRepository
-from src.catalog.forms import RecipeForm, IngredientFormSet, DirectionFormSet
+from src.catalog.repositories import RecipeRepository
 
 
 class HomepageView(generic.TemplateView):
@@ -15,8 +15,7 @@ class HomepageView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(get_homepage_context(self.request))
-        return context
+        return services.get_homepage_context_data(context, self.request)
 
 
 class RecipeListView(RecipeFilterMixin, generic.ListView):
@@ -37,16 +36,6 @@ class UserRecipeListView(RecipeFilterMixin, generic.ListView):
         return RecipeRepository.filter(is_draft=False, author__id=self.kwargs['pk'])
 
 
-class CurrentUserRecipeListView(RecipeFilterMixin, generic.ListView):
-    template_name = 'catalog/user_recipe_list.html'
-    model = Recipe
-    context_object_name = 'recipes'
-    paginate_by = 10
-
-    def get_queryset(self):
-        return RecipeRepository.filter(is_draft=False, author__id=self.request.user.id)
-
-
 class RecipeDetailView(generic.DetailView):
     template_name = 'catalog/recipe_detail.html'
     model = Recipe
@@ -60,20 +49,11 @@ class RecipeCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.method != 'POST':
-            context['direction_formset'] = DirectionFormSet(
-                prefix='direction',
-                queryset=DirectionRepository.none()
-            )
-            context['ingredient_formset'] = IngredientFormSet(
-                prefix='ingredient',
-                queryset=IngredientRepository.none()
-            )
-        return context
+        return services.get_recipe_create_context_data(context, self.request)
 
     def post(self, request: HttpRequest, *args, **kwargs):
         self.object = None
-        return RecipeService(request).execute(self)
+        return services.RecipeService(request).execute(self)
 
 
 class RecipeUpdateView(AuthorRequiredMixin, generic.UpdateView):
@@ -82,16 +62,11 @@ class RecipeUpdateView(AuthorRequiredMixin, generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.method != 'POST':
-            context['direction_formset'] = DirectionFormSet(
-                prefix='direction',
-                queryset=DirectionRepository.filter(recipe__id=self.object.id)
-            )
-            context['ingredient_formset'] = IngredientFormSet(
-                prefix='ingredient',
-                queryset=IngredientRepository.filter(recipe__id=self.object.id)
-            )
-        return context
+        return services.get_recipe_update_context_data(
+            context,
+            self.request,
+            self.object.id
+        )
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -104,7 +79,7 @@ class RecipeUpdateView(AuthorRequiredMixin, generic.UpdateView):
 
     def post(self, request: HttpRequest, *args, **kwargs):
         self.object = self.get_object()
-        return RecipeService(request).execute(self, self.object)
+        return services.RecipeService(request).execute(self, self.object)
 
 
 class RecipeDeleteView(AuthorRequiredMixin, generic.DeleteView):

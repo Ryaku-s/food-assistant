@@ -1,24 +1,65 @@
+from typing import Any, Dict
 from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.contrib import messages
 
-from src.catalog.repositories import RecipeRepository
-from src.catalog.forms import IngredientFormSet, RecipeForm, DirectionFormSet
+from src.base.services import build_context_data
+from src.catalog.repositories import DirectionRepository, IngredientRepository, RecipeRepository
+from src.catalog.forms import IngredientFormSet, DirectionFormSet, RecipeForm
 
 
-def get_homepage_context(request: HttpRequest):
-    return {
-        'user_recipes': RecipeRepository.filter(
-            4,
-            author=request.user
-        ) if request.user.is_active else None,
-        'recent_recipes': RecipeRepository.filter(
-            2,
-            is_draft=False
-        ),
-        'user_subscriptions': request.user.subscriptions.all()[:4]
-    }
+def get_homepage_context_data(
+    base_context: Dict[str, Any],
+    request: HttpRequest
+) -> Dict[str, Any]:
+    return build_context_data(
+        base_context,
+        user_recipes=RecipeRepository.filter(4, author=request.user)
+            if request.user.is_active else None,
+        recent_recipes=RecipeRepository.filter(2, is_draft=False),
+        user_subscriptions=request.user.subscriptions.all()[:4]
+            if request.user.is_active else None
+    )
+
+
+def get_recipe_create_context_data(
+    base_context: Dict[str, Any],
+    request: HttpRequest
+) -> Dict[str, Any]:
+    if request.method != 'POST':
+        return build_context_data(
+            base_context,
+            direction_formset=DirectionFormSet(
+                prefix='direction',
+                queryset=DirectionRepository.none()
+            ),
+            ingredient_formset=IngredientFormSet(
+                prefix='ingredient',
+                queryset=IngredientRepository.none()
+            )
+        )
+    return base_context
+
+
+def get_recipe_update_context_data(
+    base_context: Dict[str, Any],
+    request: HttpRequest,
+    pk: int
+) -> Dict[str, Any]:
+    if request.method != 'POST':
+        return build_context_data(
+            base_context,
+            direction_formset=DirectionFormSet(
+                prefix='direction',
+                queryset=DirectionRepository.filter(recipe__pk=pk)
+            ),
+            ingredient_formset=IngredientFormSet(
+                prefix='ingredient',
+                queryset=IngredientRepository.filter(recipe__pk=pk)
+            )
+        )
+    return base_context
 
 
 class RecipeService:
