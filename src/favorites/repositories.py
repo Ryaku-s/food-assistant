@@ -3,4 +3,4 @@ from src.favorites.models import Favorites
 
 
 class FavoritesRepository(ModelRepository):
-    model = Favorites
+    _model = Favorites

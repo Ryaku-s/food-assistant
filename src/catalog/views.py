@@ -53,7 +53,7 @@ class RecipeCreateView(LoginRequiredMixin, generic.CreateView):
 
     def post(self, request: HttpRequest, *args, **kwargs):
         self.object = None
-        return services.RecipeService(request).execute(self)
+        return services.RecipeFormService(request).create(self)
 
 
 class RecipeUpdateView(AuthorRequiredMixin, generic.UpdateView):
@@ -79,7 +79,7 @@ class RecipeUpdateView(AuthorRequiredMixin, generic.UpdateView):
 
     def post(self, request: HttpRequest, *args, **kwargs):
         self.object = self.get_object()
-        return services.RecipeService(request).execute(self, self.object)
+        return services.RecipeFormService(request).update(self, self.object)
 
 
 class RecipeDeleteView(AuthorRequiredMixin, generic.DeleteView):

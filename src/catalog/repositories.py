@@ -3,11 +3,11 @@ from src.catalog.models import Category, Direction, Ingredient, NationalCuisine,
 
 
 class RecipeRepository(ModelRepository):
-    model = Recipe
+    _model = Recipe
 
     @classmethod
     def filter(cls, limit = None, *args, **kwargs):
-        queryset = cls.model.objects.defer(
+        queryset = cls._model.objects.defer(
             'author__password',
             'author__last_login',
             'author__is_superuser',
@@ -20,16 +20,16 @@ class RecipeRepository(ModelRepository):
 
 
 class CategoryRepository(ModelRepository):
-    model = Category
+    _model = Category
 
 
 class NationalCuisineRepository(ModelRepository):
-    model = NationalCuisine
+    _model = NationalCuisine
 
 
 class DirectionRepository(ModelRepository):
-    model = Direction
+    _model = Direction
 
 
 class IngredientRepository(ModelRepository):
-    model = Ingredient
+    _model = Ingredient

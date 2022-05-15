@@ -5,8 +5,8 @@ from src.accounts.models import Follower
 
 
 class UserRepository(ModelRepository):
-    model = get_user_model()
+    _model = get_user_model()
 
 
 class FollowerRepository(ModelRepository):
-    model = Follower
+    _model = Follower
