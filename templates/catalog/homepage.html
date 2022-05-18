@@ -3,17 +3,19 @@
 {% block main %}active{% endblock %}
 
 {% block content %}
-		<div style="color:white; flex-shrink: 1;" class="container bg-success d-flex rounded-3 p-3 mx-2">
-			<div class="col-auto my-auto me-3">
+		<div style="color:white; flex-shrink: 1;" class="container bg-success rounded-3 p-3 mx-2">
+			<div class="d-flex">
+				<div class="col-auto my-auto me-3">
 				<img width="48" height="48" src="https://cdn-icons-png.flaticon.com/512/992/992710.png" alt="Croissant" title="Croissant" class="loaded">
-			</div>
-			<div class="my-auto">
-				<h5 class="col mb-0">Foodstuff Assistant</h5>
-				<p class="small mb-0">2021</p>
+				</div>
+				<div class="my-auto">
+				<h5 class="col mb-0 logo">Food Assistant</h5>
+				<p class="small mb-0">2022</p>
+				</div>
 			</div>
 		</div>
-		<div style="min-height: 389px;" class="container row mt-3">
-			<div style="background-color: white;" class="col container shadow-sm rounded p-3 mx-2 border-top border-success">
+		<div style="min-height: 389px;" class="container row my-3">
+			<div style="background-color: white;" class="col container p-3 mx-2 border-top border-success shadow-sm">
 				<h5>Ваши рецепты</h5>
 				<hr class="rounded">
 				<div class="container">
@@ -24,25 +26,23 @@
 								<img style="width: 32px; height: 32px; border-radius: .65rem .65rem .65rem .65rem; object-fit: cover" src="{{ recipe.image.url }}">
 							</div>
 							<p class="pb-3 mb-0 small lh-sm">
-							<a href="{{ recipe.get_absolute_url }}" style="font-weight: bolder;" class="d-block link-success">
-                {{ recipe.title }}
-              </a>
+							<a href="{{ recipe.get_absolute_url }}" style="font-weight: bolder;" class="d-block link-success">{{ recipe.title }}</a>
 							{{ recipe.category }} • {% if not recipe.is_draft%}
-                Опубликован: {{ recipe.pub_date|date:"d/m/Y" }}
-              {% else %}
-                Черновик
-              {% endif %}
+								Опубликован: {{ recipe.pub_date|date:"d/m/Y" }}
+							{% else %}
+								Черновик
+							{% endif %}
 						</div>
 						<hr style="margin-left: 38px;" class="mt-0 bg-secondary">
 					{% endfor %}
-          {% else %}
-            <div style="text-align: center;" class="text-muted mb-0">
-              <p>Здесь будут отображены ваши рецепты</p>
-            </div>
-          {% endif %}
+					{% else %}
+					<div style="text-align: center;" class="text-muted mb-0">
+						<p>Здесь будут отображены ваши рецепты</p>
+					</div>
+					{% endif %}
 				</div>
 			</div>
-			<div style="background-color: white;" class="col container shadow-sm rounded p-3 mx-2 border-top border-success">
+			<div style="background-color: white;" class="col container p-3 mx-2 border-top border-success shadow-sm">
 				<h5>Ваши подписки</h5>
 				<hr class="rounded">
 				<div class="container">
@@ -71,12 +71,12 @@
 				</div>
 			</div>
 		</div>
-		<h1 class="my-3 mx-2">Последние рецепты:</h1>
-		<div class="row g-3 mb-3">
+		<h2 class="mt-2 mx-2">Последние рецепты:</h2>
+		<div class="row gx-3 my-3">
 			{% for recipe in recent_recipes %}
 				<div class="col-sm-6">
-					<div style="background-color: white; min-height: 280px;" class="row g-0 rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-						<div class="col p-4 d-flex flex-column position-static">
+					<div style="background-color: white; min-height: 280px;" class="row g-0 overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+						<div class="col p-4 d-flex flex-column position-static border-top border-success">
 							<strong class="d-inline-block mb-2 text-success">{{ recipe.category }} • {{ recipe.national_cuisine }}</strong>
 							<h3 class="mb-0">{{ recipe.title|truncatewords:5 }}</h3>
 							<small class="my-0 text-muted">{{ recipe.pub_date|date:"d/m/Y" }}</small>
@@ -86,7 +86,7 @@
 						</div>
 						{% if recipe.image %}
 							<div class="col-auto d-none d-lg-block">
-								<img style="width: 210px; height: 280px; border-radius: 0 .65rem .65rem 0; object-fit: cover" src="{{ recipe.image.url }}">
+								<img style="width: 210px; height: 280px; object-fit: cover" src="{{ recipe.image.url }}">
 							</div>
 						{% else %}
 							<svg class="col-auto d-none d-lg-block" style="border-radius: .2rem; width: 210px; height: 280px; object-fit: cover" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e9ecef"></rect></svg>

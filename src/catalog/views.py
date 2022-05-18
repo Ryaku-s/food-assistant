@@ -1,13 +1,13 @@
+from django.http import JsonResponse, HttpRequest
 from django.views import generic
 from django.urls.base import reverse
-from django.http import JsonResponse, HttpRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from src.base.mixins import AuthorRequiredMixin, RecipeFilterMixin
 from src.catalog import services
+from src.catalog.models import Recipe
 from src.catalog.forms import RecipeForm
-from src.catalog.models import Food, Recipe
-from src.catalog.repositories import RecipeRepository
+from src.catalog.repositories import FoodRepository, RecipeRepository
 
 
 class HomepageView(generic.TemplateView):
@@ -92,5 +92,10 @@ class RecipeDeleteView(AuthorRequiredMixin, generic.DeleteView):
 def load_units(request: HttpRequest):
     """Загружает единицы измерения для выбранной еды (ajax)."""
     food_id = int(request.GET.get("food_id"))
-    units = Food.objects.get(pk=food_id).units.all()
+    food = FoodRepository.get_object_or_none(pk=food_id)
+
+    if not food:
+        return JsonResponse({'detail': 'Food not found'}, status=404)
+    units = food.units.all()
+
     return JsonResponse(list(units.values('id', 'name', 'is_countable')), safe=False)

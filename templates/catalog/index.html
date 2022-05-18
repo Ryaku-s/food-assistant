@@ -7,29 +7,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title></title>
 	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-	<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+	<link rel="stylesheet" href="{% static 'css/main.css' %}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&family=Montserrat&display=swap" rel="stylesheet">
 	<link rel="shortcut icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2885/2885483.png"/>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
 </head>
-<style>
-	html {
-		position: relative;
-		min-height: 100%;
-	}
-	body {
-		margin-bottom: 60px;
-	}
-	#footer {
-		position: absolute;
-		bottom: 0;
-		width: 100%;
-		height: 60px;
-	}
-</style>
 <body class="bg-light">
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
-		  	<a class="navbar-brand">Foodstuff Assistant</a>
+		  	<a class="navbar-brand logo">Food Assistant</a>
 			<div class="my-auto ms-0 navbar-brand">
 				<img width="32" height="32" src="https://cdn-icons-png.flaticon.com/512/992/992710.png" alt="Croissant" title="Croissant" class="loaded">
 			</div>
@@ -93,18 +81,16 @@
 	  </div>
 	</nav>
 	<div class="container px-0 pb-5">
-	    <main class="row pt-4">
+	    <main class="d-flex row pt-4">
 			{% block content %}
 			{% endblock %}
     	</main>
 	</div>
-	<div id="footer" style="background-color: white;" class="border-top navbar-fixed-bottom">
-		<footer class="container d-flex flex-wrap justify-content-between align-items-center pt-3">
-			<div class="col-md-4 d-flex align-items-center position-relative">
-				<img class="mx-2" width="32" height="32" src="https://cdn-icons-png.flaticon.com/512/992/992710.png" alt="Croissant" title="Croissant" class="loaded">
-				<span class="text-muted">2022 | Foodstuff Assistant, by <a href="https://github.com/Ryaku-s/" class="link-success">Ryaku-s</a></span>
-			</div>
-		</footer>
-	</div>
+	<footer style="background-color: white;" class="w-100 border-top navbar-fixed-bottom py-3">
+		<div class="col-md-4 mx-auto">
+			<img class="mx-2" width="32" height="32" src="https://cdn-icons-png.flaticon.com/512/992/992710.png" alt="Croissant" title="Croissant" class="loaded">
+			<span class="text-muted">2022 | Food Assistant, by <a href="https://github.com/Ryaku-s/" class="link-success">Ryaku-s</a></span>
+		</div>
+	</footer>
 </body>
 </html>

@@ -36,21 +36,13 @@ class DirectionForm(ModelForm):
         fields = "__all__"
 
 
-DirectionFormSet = modelformset_factory(
-    Direction,
-    DirectionForm,
-    exclude=['position', 'recipe'],
-    extra=2,
-    can_delete=True
-)
-
-
 class IngredientForm(ModelForm):
     """Форма создания ингредиента"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["food"].widget.attrs.update({'class': "form-select", 'id': "foodSelect"})
         self.fields["amount"].widget.attrs.update({'class': "form-control form-amount"})
+        self.fields["unit"].queryset = Unit.objects.none()
         self.fields["unit"].widget.attrs.update({'class': "form-select form-unit"})
 
     class Meta:
@@ -58,9 +50,16 @@ class IngredientForm(ModelForm):
         exclude = "recipe",
 
 
+DirectionFormSet = modelformset_factory(
+    Direction,
+    DirectionForm,
+    exclude=('position', 'recipe'),
+    extra=1,
+    can_delete=True
+)
 IngredientFormSet = modelformset_factory(
     Ingredient,
     IngredientForm,
-    extra=2,
+    extra=1,
     can_delete=True
 )

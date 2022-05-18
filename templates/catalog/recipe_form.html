@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="container my-5 row mx-auto">
-  <div style="background-color: white; padding: min(3rem, 5%); max-width: 65%;" class="rounded border-top col border-success shadow-sm">
+  <div style="background-color: white; padding: min(3rem, 5%); max-width: 65%;" class="border-top col border-success shadow-sm">
     <form id="recipeForm" method="post" enctype="multipart/form-data" url-load-units="{% url 'ajax_load_units' %}">
       {% csrf_token %}
       {% for message in messages %}
@@ -112,7 +112,7 @@
             </div>
           {% endfor %}
         </div>
-        <div id="addIngredient" class="btn btn-outline-success">Добавить ингредиент</div>
+        <div id="addIngredientBtn" class="btn btn-outline-success">Добавить ингредиент</div>
         <hr>
       </div>
       <h3 class="mb-0 mt-3">Указания к рецепту</h3>
@@ -130,7 +130,7 @@
           </div>
         {% endfor %}
       </div>
-      <div id="addDirection" class="btn btn-outline-success w-100">Добавить указание</div>
+      <div id="addDirectionBtn" class="btn btn-outline-success w-100">Добавить указание</div>
       <hr>
       <div class="row">
         <button class="btn btn-outline-success col-2 me-3" type="submit" id="button-addon2">Сохранить</button>
@@ -157,5 +157,5 @@
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
-<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/recipe-form.js' %}"></script>
 {% endblock %}

@@ -1,6 +1,46 @@
+const foodSelects = document.querySelectorAll("#foodSelect");
+const unitSelects = document.querySelectorAll(".form-unit");
+
+// Отключение поля количества, если "на вкус"
+function disableAmountInput(unitSelect) {
+    option = unitSelect.options[unitSelect.selectedIndex];
+    if (option.getAttribute('countable') == 'false') {
+        unitSelect.parentNode.parentNode.querySelector(".form-amount").setAttribute("disabled", "");
+        unitSelect.parentNode.parentNode.querySelector(".form-amount").value = null;
+    } else {
+        unitSelect.parentNode.parentNode.querySelector(".form-amount").removeAttribute("disabled");
+    }
+}
+
+
+function changeUnitInput(event) {
+    disableAmountInput(event.target);
+}
+
+// Меняем queryset unit-ов
+function changeUnitQueryset() {
+    const number = this.parentNode.parentNode.getAttribute("form-number");
+    const foodId = $(this).val();
+    const url = $("#recipeForm").attr("url-load-units");
+
+    $.ajax({
+        url: url,
+        data: {
+        'food_id': foodId
+        },
+        success: function (data) {
+            let selectHTML = "<option value=\"\" selected=\"\">---------</option>"
+            for (unit of data) {
+                selectHTML += `<option countable="${unit.is_countable}" value="${unit.id}">${unit.name}</option>`
+            }
+            $(`#id_ingredient-${number}-unit`).html(selectHTML);
+        }
+    })
+}
+
 // Ingredient Formset
 const ingredientForm = document.querySelector("#emptyIngredient"),
-      addIngredientBtn = document.querySelector("#addIngredient"),
+      addIngredientBtn = document.querySelector("#addIngredientBtn"),
       ingredientFormSet = document.querySelector("#ingredientFormSet");
 
 
@@ -19,9 +59,6 @@ function addIngredientForm() {
     newForm.querySelector(".form-unit").onchange = changeUnitInput;
     ingredientFormSet.appendChild(newForm);
 }
-
-
-addIngredientBtn.addEventListener('click', addIngredientForm)
 
 
 function removeIngredientForm(formNumber) {
@@ -57,60 +94,9 @@ function removeIngredientForm(formNumber) {
     document.querySelector("#id_ingredient-TOTAL_FORMS").value -= 1;
 }
 
-
-const foodSelects = document.querySelectorAll("#foodSelect");
-const unitSelects = document.querySelectorAll(".form-unit");
-
-// Отключение поля количества, если "на вкус"
-function disableAmountInput(unitSelect) {
-    option = unitSelect.options[unitSelect.selectedIndex];
-    if (option.getAttribute('countable') == 'false') {
-        unitSelect.parentNode.parentNode.querySelector(".form-amount").setAttribute("disabled", "");
-        unitSelect.parentNode.parentNode.querySelector(".form-amount").value = null;
-    } else {
-        unitSelect.parentNode.parentNode.querySelector(".form-amount").removeAttribute("disabled");
-    }
-}
-
-
-for (foodSelect of foodSelects) {
-    $(foodSelect).on("change", changeUnitQueryset);
-}
-
-for (unitSelect of unitSelects) {
-    disableAmountInput(unitSelect);
-    $(unitSelect).on("change", changeUnitInput);
-};
-
-
-function changeUnitInput(event) {
-    disableAmountInput(event.target);
-}
-
-// Меняем queryset unit-ов
-function changeUnitQueryset() {
-    const number = this.parentNode.parentNode.getAttribute("form-number");
-    const foodId = $(this).val();
-    const url = $("#recipeForm").attr("url-load-units");
-
-    $.ajax({
-        url: url,
-        data: {
-        'food_id': foodId
-        },
-        success: function (data) {
-            let selectHTML = "<option value=\"\" selected=\"\">---------</option>"
-            for (unit of data) {
-                selectHTML += `<option countable="${unit.is_countable}" value="${unit.id}">${unit.name}</option>`
-            }
-            $(`#id_ingredient-${number}-unit`).html(selectHTML);
-        }
-    })
-}
-
 // Direction Formset
 const directionForm = document.querySelector("#emptyDirection"),
-      addDirectionBtn = document.querySelector("#addDirection"),
+      addDirectionBtn = document.querySelector("#addDirectionBtn"),
       directionFormSet = document.querySelector("#directionFormSet");
 
 function addDirectionForm() {
@@ -126,9 +112,6 @@ function addDirectionForm() {
     newForm.id = "directionForm";
     directionFormSet.appendChild(newForm);
 }
-
-
-addDirectionBtn.addEventListener('click', addDirectionForm)
 
 
 function removeDirectionForm(formNumber) {
@@ -163,3 +146,17 @@ function removeDirectionForm(formNumber) {
     }
     document.querySelector("#id_direction-TOTAL_FORMS").value -= 1;
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    for (foodSelect of foodSelects) {
+        $(foodSelect).on("change", changeUnitQueryset);
+    }
+    for (unitSelect of unitSelects) {
+        disableAmountInput(unitSelect);
+        $(unitSelect).on("change", changeUnitInput);
+    };
+
+    addIngredientBtn.addEventListener('click', addIngredientForm);
+    addDirectionBtn.addEventListener('click', addDirectionForm);
+})

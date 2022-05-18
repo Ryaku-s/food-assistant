@@ -1,9 +1,9 @@
 from src.base.repositories import ModelRepository
-from src.catalog.models import Category, Direction, Ingredient, NationalCuisine, Recipe
+from src.catalog import models
 
 
 class RecipeRepository(ModelRepository):
-    _model = Recipe
+    _model = models.Recipe
 
     @classmethod
     def filter(cls, limit = None, *args, **kwargs):
@@ -20,16 +20,20 @@ class RecipeRepository(ModelRepository):
 
 
 class CategoryRepository(ModelRepository):
-    _model = Category
+    _model = models.Category
 
 
 class NationalCuisineRepository(ModelRepository):
-    _model = NationalCuisine
+    _model = models.NationalCuisine
 
 
 class DirectionRepository(ModelRepository):
-    _model = Direction
+    _model = models.Direction
 
 
 class IngredientRepository(ModelRepository):
-    _model = Ingredient
+    _model = models.Ingredient
+
+
+class FoodRepository(ModelRepository):
+    _model = models.Food
