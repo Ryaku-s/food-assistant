@@ -37,3 +37,7 @@ class IngredientRepository(ModelRepository):
 
 class FoodRepository(ModelRepository):
     _model = models.Food
+
+
+class SavedRecipeRepository(ModelRepository):
+    _model = models.SavedRecipe

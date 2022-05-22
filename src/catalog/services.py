@@ -8,9 +8,10 @@ from django.forms.models import BaseModelFormSet
 from django.views.generic import CreateView, UpdateView
 
 from src.base.services import build_context_data
+from src.accounts.models import User
 from src.catalog.forms import IngredientFormSet, DirectionFormSet, RecipeForm
 from src.catalog.models import Recipe
-from src.catalog.repositories import DirectionRepository, IngredientRepository, RecipeRepository
+from src.catalog.repositories import DirectionRepository, IngredientRepository, RecipeRepository, SavedRecipeRepository
 
 
 def get_homepage_context_data(
@@ -24,6 +25,20 @@ def get_homepage_context_data(
         recent_recipes=RecipeRepository.filter(2, is_draft=False),
         user_subscriptions=request.user.subscriptions.all()[:4]
             if request.user.is_active else None
+    )
+
+
+def get_recipe_detail_context_data(
+    base_context: Dict[str, Any],
+    request: http.HttpRequest,
+    recipe: Recipe
+) -> Dict[str, Any]:
+    return build_context_data(
+        base_context,
+        is_recipe_in_user_saved_recipes=is_recipe_in_user_saved_recipes(
+            recipe=recipe,
+            user=request.user
+        )
     )
 
 
@@ -165,3 +180,22 @@ class RecipeFormService:
                 ingredient_formset=ingredient_formset,
                 direction_formset=direction_formset
             ))
+
+
+def create_saved_recipe(user: User, pk: int) -> http.HttpResponseRedirect:
+    recipe = RecipeRepository.get_object_or_404(is_draft=False, pk=pk)
+    SavedRecipeRepository.get_or_create(user=user, recipe=recipe)
+    return redirect(recipe)
+
+
+def delete_saved_recipe(user: User, pk: int) -> http.HttpResponseRedirect:
+    recipe = RecipeRepository.get_object_or_404(is_draft=False, pk=pk)
+    SavedRecipeRepository.get_or_create(user=user, recipe=recipe).delete()
+    return redirect(recipe)
+
+
+def is_recipe_in_user_saved_recipes(recipe: Recipe, user: User) -> bool:
+    if user.is_active:
+        return recipe.pk in [saved_recipe.recipe.pk for saved_recipe in
+            SavedRecipeRepository.filter(user=user)]
+    return False

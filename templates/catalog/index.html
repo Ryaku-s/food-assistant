@@ -60,7 +60,7 @@
 				<a class="nav-link {% block subscriptions %}{% endblock %}" href="{% url 'account_subscriptions' %}">Подписки</a>
 			</li>
 			<li class="nav-item">
-	          <a class="nav-link {% block favorites %}{% endblock %}" href="{% url 'favorite_recipe_list' %}">Избранное</a>
+	          <a class="nav-link {% block favorites %}{% endblock %}" href="{% url 'favorite_recipe_list' pk=request.user.pk %}">Избранное</a>
 	        </li>
 			<li class="nav-item">
 				<form method="post" action="{% url 'account_logout' %}">

@@ -2,12 +2,13 @@ from django.http import JsonResponse, HttpRequest
 from django.views import generic
 from django.urls.base import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 from src.base.mixins import AuthorRequiredMixin, RecipeFilterMixin
 from src.catalog import services
 from src.catalog.models import Recipe
 from src.catalog.forms import RecipeForm
-from src.catalog.repositories import FoodRepository, RecipeRepository
+from src.catalog.repositories import FoodRepository, RecipeRepository, SavedRecipeRepository
 
 
 class HomepageView(generic.TemplateView):
@@ -40,6 +41,14 @@ class RecipeDetailView(generic.DetailView):
     template_name = 'catalog/recipe_detail.html'
     model = Recipe
     queryset = RecipeRepository.filter(is_draft=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return services.get_recipe_detail_context_data(
+            context,
+            self.request,
+            self.get_object()
+        )
 
 
 class RecipeCreateView(LoginRequiredMixin, generic.CreateView):
@@ -87,6 +96,29 @@ class RecipeDeleteView(AuthorRequiredMixin, generic.DeleteView):
 
     def get_success_url(self) -> str:
         return reverse('homepage')
+
+
+class SavedRecipeListView(LoginRequiredMixin, RecipeFilterMixin, generic.ListView):
+    template_name = "catalog/favorite_recipe_list.html"
+    model = Recipe
+    context_object_name = "recipes"
+    paginate_by = 10
+
+    def get_queryset(self):
+        pks = [saved_recipe.recipe.pk for saved_recipe in SavedRecipeRepository\
+            .filter(user=self.request.user)]
+        print(RecipeRepository.filter(pk__in=pks))
+        return RecipeRepository.filter(pk__in=pks)
+
+
+@login_required
+def save_recipe_to_user(request: HttpRequest, pk: int):
+    return services.create_saved_recipe(request.user, pk)
+
+
+@login_required
+def remove_recipe_from_user(request: HttpRequest, pk: int):
+    return services.delete_saved_recipe(request.user, pk)
 
 
 def load_units(request: HttpRequest):

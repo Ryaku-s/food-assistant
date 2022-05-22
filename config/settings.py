@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY", 'django-insecure-0^8@@bjmrhtr&c*9tf=dz%sw8wqdo8bqfwe87wj(i$ywq(p&s1')
@@ -35,8 +34,7 @@ INSTALLED_APPS = [
     'allauth.account',
 
     'src.accounts',
-    'src.catalog',
-    'src.favorites'
+    'src.catalog'
 ]
 
 MIDDLEWARE = [

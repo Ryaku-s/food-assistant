@@ -2,7 +2,7 @@
 ## Описание
 Учебный проект кулинарного сайта на Django
 ### Инструменты
-- Python 3
+- Python 3.8
 - Django
 - JavaScript
 - JQuery

@@ -42,7 +42,6 @@ class IngredientForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["food"].widget.attrs.update({'class': "form-select", 'id': "foodSelect"})
         self.fields["amount"].widget.attrs.update({'class': "form-control form-amount"})
-        self.fields["unit"].queryset = Unit.objects.none()
         self.fields["unit"].widget.attrs.update({'class': "form-select form-unit"})
 
     class Meta:

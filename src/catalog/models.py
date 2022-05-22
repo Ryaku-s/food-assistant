@@ -147,3 +147,15 @@ class Direction(models.Model):
 
     def __str__(self) -> str:
         return f"{self.recipe} - указание #{self.position + 1}"
+
+
+class SavedRecipe(models.Model):
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name="saved_recipes", verbose_name="Пользователь")
+    recipe = models.ForeignKey(to=Recipe, on_delete=models.CASCADE, verbose_name="Рецепт")
+
+    class Meta:
+        verbose_name = "Сохранённый рецепт"
+        verbose_name_plural = "Сохранённые рецепты"
+
+    def __str__(self):
+        return f"Сохранённый рецепт \"{self.recipe}\" пользователя {self.user}"
